@@ -1,0 +1,33 @@
+var UsersSchema = mongoose.Schema({
+User_id: String,
+PreferredEmail: String
+});
+
+var ThreadsSchema = mongoose.Schema({
+Thread_id: String,
+user_id: String
+});
+
+var ThreadsSchema = mongoose.Schema({
+Thread_id: String,
+User_id: String
+});
+
+var notificationSchema = mongoose.Schema ({
+Notification_id: String,
+Thread_id: String,
+User_id: String,
+TimeAndDate: Date,
+Type: String,
+Context: String,
+Read: Boolean
+});
+
+var subscriptionSchema = mongoose.Schema ({
+    User_id: String,
+    Thread_id: String,
+    Deletion: Boolean,
+    Appraisal: Boolean,
+    InstantEmail: Boolean,
+    DailyEmail: Boolean
+});
