@@ -1,45 +1,36 @@
+var express = require('express'),
+    app = express();
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended : true}));
 var http = require('http'), fs = require('fs');
 var nodemailer = require('nodemailer');
 
-var type ="";
+// as only one page can use res.sendfile to render the page which will contain the drop   downs
+app.post('/', function (req, res) {
+    res.sendfile('Appraisal.html');
+});
 
-//This function is called and stores the appraisal type selected by the user
-function sel()
-{
-	  var e = document.getElementById("appraisalType");
-      var type = "The Value is: " + e.options[e.selectedIndex].value + " and text is: " + e.options[e.selectedIndex].text;
-    
-}
-
-
-fs.readFile('Appraisal.html', function (err, html) 
-{
-    if (err) 
-	{
-        throw err; 
-    }       
-    http.createServer(function(request, response) 
-	{  
-        response.writeHeader(200, {"Content-Type": "text/html"});  
-        response.write(html);  
-		if(request.method === 'POST') // This is to allow the button to click, Can add functionality later which allows for fields to be entered etc
-		{
-			
-			send("DiscussionThree@gmail.com", 'DiscussionThree@gmail.com', "New Appraisal Notification",type,'<b>New Buzz Space Notification ✔</b>')
-		console.log("DONE VIA BUTTON CLICK")
-		}
+//Builds the content used to send the email using the appraisal type
+app.post('/target', function (req, res) {
+	var appraisal = req.body.appraisal;
+	var econtent = "New Buzz Space Notification";
+	var bod = "User has given your post this appraisal:  " + appraisal ;
+	send("DiscussionThree@gmail.com", 'DiscussionThree@gmail.com', "New Appraisal Notification",econtent,bod);
 		
-		if(request.method === 'GET')
-		{
-			console.log('GET');
-		}
-        response.end();  
-    }).listen(80);
+});
+
+//Gets the specific action and opens the html page
+app.get('/', function (req, res) {
+    res.sendfile('Appraisal.html');
+});
+
+//Listens to the port 
+app.listen(81,'127.0.0.1',function(){
+	console.log('Server is running.');
 });
 
 //This is the important Function - From can be changed to be global at a later stage
-function send(_to, _From, _Subject, _text, _htmlText)
-{
+function send(_to, _From, _Subject, _text, _htmlText){
 	// create reusable transporter object using SMTP transport
 	var transporter = nodemailer.createTransport({
 		service: 'Gmail',
