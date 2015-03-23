@@ -13,8 +13,16 @@ fs.readFile('index.html', function (err, html)
         response.write(html);  
 		if(request.method === 'POST') // This is to allow the button to click, Can add functionality later which allows for fields to be entered etc
 		{
-			
-			send("DiscussionThree@gmail.com", 'DiscussionThree@gmail.com', "New Notification", "New Buzz Space Notification",'<b>New Buzz Space Notification ✔</b>')
+			var options = {
+				from: 'DiscussionThree@gmail.com',
+				to : "matty.gouws@gmail.com",
+				Subject: "New Notification",
+				plain: "New Buzz Space Notification",
+				html: '<b>New Buzz Space Notification ✔</b>',
+			}
+			var str = JSON.stringify(options);
+			console.log(str);
+			send(str);
 		console.log("DONE VIA BUTTON CLICK")
 		}
 		
@@ -26,10 +34,9 @@ fs.readFile('index.html', function (err, html)
     }).listen(80);
 });
 
-//This is the important Function - From can be changed to be global at a later stage
-function send(_to, _From, _Subject, _text, _htmlText)
+//This function Sends the email, Takes in a JSON string in the format FROM, TO, SUBJECT, PLAIN, HTML
+function send(options)
 {
-	// create reusable transporter object using SMTP transport
 	var transporter = nodemailer.createTransport({
 		service: 'Gmail',
 		auth: {
@@ -37,21 +44,7 @@ function send(_to, _From, _Subject, _text, _htmlText)
 			pass: 'qetuoadgjl'
 		}
 	});
-
-	var mailOptions = {
-			from: 'noReply@Buzz.cs.up.ac.za ✔<'+_From+'>', // sender address
-			to: _to, // list of receivers
-			subject: _Subject, // Subject line
-			text: _text, // plaintext body
-			html: _htmlText // html body
-	};
-	// NB! No need to recreate the transporter object. You can use
-	// the same transporter object for all e-mails
-
-	// setup e-mail data with unicode symbols
-
-
-	// send mail with defined transport object
+	var mailOptions = JSON.parse(options);
 	transporter.sendMail(mailOptions, function(error, info){
 		if(error){
 			console.log("****" + error);
