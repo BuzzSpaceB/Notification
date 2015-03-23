@@ -15,7 +15,7 @@ fs.readFile('index.html', function (err, html)
 		{
 			var options = {
 				from: 'DiscussionThree@gmail.com',
-				to : "matty.gouws@gmail.com",
+				to : "DiscussionThree@gmail.com",
 				Subject: "New Notification",
 				plain: "New Buzz Space Notification",
 				html: '<b>New Buzz Space Notification ✔</b>',
