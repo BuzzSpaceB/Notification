@@ -1,0 +1,25 @@
+<html>
+<head>
+	<title>TestingNodeJS</title>
+</head>
+<body>
+	<h1>Testing Email Functionality</h1>
+	<h2>Plain Notification</h2>
+	<form action='notify' method="POST">
+		<input name="SendMail" id="like" value="SendMail" type="submit" />
+	</form>
+	<br>
+	<hr>
+	<br>
+	<h2>Appraisal Notification</h2>
+	<form action='/appraisal' method="POST">
+		Select the type of appraisal:
+		<select id="appraisalType" name="appraisal">
+			<option value="Funny">Funny</option>
+			<option value="Like">Like</option>
+			<option value="Dislike">Dislike</option>
+		</select>
+		<input name="SendMail" id="like" value="appraise" type="submit" />
+	</form>
+</body>
+</html>
