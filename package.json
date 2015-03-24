@@ -1,0 +1,27 @@
+{
+  "name": "Notification",
+  "version": "0.0.1",
+  "description": "Notification Module",
+  "main": "Email.js",
+  "dependencies": {
+    "nodemailer": "^1.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "Test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BuzzSpaceB/Notification"
+  },
+  "keywords": [
+    "Notification",
+    "Email"
+  ],
+  "author": "Notification-B Team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BuzzSpaceB/Notification/issues"
+  },
+  "homepage": "https://github.com/BuzzSpaceB/Notification"
+}
