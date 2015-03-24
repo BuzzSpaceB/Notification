@@ -1,1 +1,31 @@
-.
+var users = new Schema({
+    user_id: string,
+	prefferedEmail: string 
+})
+
+var threads = new Schema ({
+	Thread_id: String, 							
+	Thread_id: String,							
+	user_id: String								
+})
+
+var subscription = new Schema ({
+	Subscriptionid: String,						
+	User_id: String, 							
+	Thread_id: String, 							
+	User_id: [String], 							
+	Deletion: Boolean, 							
+	Appraisal: Boolean, 						
+	InstantEmail: Boolean, 						
+	DailyEmail: Boolean							     
+})
+
+var notification = new Schema ({
+	Notification_id: String,					
+	Thread_id: String,							
+	User_id: String,							
+	Time&Date: Date, 							 
+	Type: String, 								 
+	Context: String,							
+	Read: Boolean 								
+})
