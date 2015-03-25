@@ -1,5 +1,5 @@
 /********************************************************************************************************/
-function AprraisalNotification(obj)
+function AprraisalNotification(obj) //-- Liz
 {
 	var details = JSON.parse(obj);
 	//Query the MongoDB to find all users with the UserID contained in OBJ
@@ -12,7 +12,7 @@ function AprraisalNotification(obj)
 }
 //--------------------------------------------------------------------------------------------------------
 /********************************************************************************************************/
-function DeleteNotification(obj)
+function DeleteNotification(obj) //-- Andre
 {
 	var details = JSON.parse(obj);
 	//check the obj if the user who issued the delete wishes to send a notification
@@ -26,7 +26,7 @@ function DeleteNotification(obj)
 }
 //--------------------------------------------------------------------------------------------------------
 /********************************************************************************************************/
-function StandardNotification(obj)
+function StandardNotification(obj)//--Xoliswa
 {
 	var details = JSON.parse(obj);
 	//traverse up the Thread Tree to the root node
@@ -36,14 +36,7 @@ function StandardNotification(obj)
 }
 //--------------------------------------------------------------------------------------------------------
 /********************************************************************************************************/
-function WebNotification(obj)
-{
-	var details = JSON.parse(obj);
-	//Add the Notification to a DB to be displayed via the Web - Read -- Default ON
-}
-//--------------------------------------------------------------------------------------------------------
-/********************************************************************************************************/
-function EditSubscription(obj)
+function EditSubscription(obj) //--Izak
 {
 	var details = JSON.parse(obj);
 	//Check if the edit is a delete or edit
@@ -51,12 +44,15 @@ function EditSubscription(obj)
 }
 //--------------------------------------------------------------------------------------------------------
 /********************************************************************************************************/
-function DailyNotification() //--Extra User can specify the frequency of "daily" emails - Daily-2nd Day- Weekly - Monthly
+function DailyNotification() //--Matt
+//--Extra User can specify the frequency of "daily" emails - Daily-2nd Day- Weekly - Monthly
 {
 	//Use Node Schedule -- https://github.com/node-schedule (CRON Style)
 	//Go Through the Notification Database and compile Email's per user to be sent about Current Day's Happenings
 }
 //--------------------------------------------------------------------------------------------------------
+
+//NICE TO HAVE
 /********************************************************************************************************/
 function GetWebNotifications(obj) 
 {
@@ -67,3 +63,10 @@ function GetWebNotifications(obj)
 
 }
 //---------------------------------------------------------------------------------------------------------
+/********************************************************************************************************/
+function WebNotification(obj)
+{
+	var details = JSON.parse(obj);
+	//Add the Notification to a DB to be displayed via the Web - Read -- Default ON
+}
+//--------------------------------------------------------------------------------------------------------
