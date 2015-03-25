@@ -1,5 +1,6 @@
+{
 "private": true,
-  "main": "Email.js",
+  "main": "Test.js",
   "name": "Notification",
   "description": "This package serves to give notification to the Buzz System",
   "version": "0.0.1",
@@ -24,12 +25,10 @@
       "name": "Andre Calitz",
       "email": "andcalitz@gmail.com"
     },
-	},
     {
       "name": "Izak Blom",
       "email": "u13126777@tuks.co.za"
     },
-	},
     {
       "name": "Xoliswa Ntshingila",
       "email": "x.ntshingila@gmail.com"
