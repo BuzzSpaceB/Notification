@@ -16,30 +16,30 @@ app.post('/appraisal', function (req, res) {
     var appraisal = req.body.appraisal;
 
     var options = {
-        from: 'DiscussionThree@gmail.com',
-        to : "u12207871@tuks.co.za",                        //Change this to the email addess you want to receive the email. This will eventually be the user's email.
+        from: 'Buzz No Reply <DiscussionThree@gmail.com>',
+        to : "DiscussionThree@gmail.com",                        //Change this to the email addess you want to receive the email. This will eventually be the user's email.
         Subject: "New Buzz Appraisal Notification",
         plain: "New Buzz Appraisal Notification",
         html: "User has given your post this appraisal:  " + appraisal
     }
 
     var str = JSON.stringify(options);
-
+	res.sendfile('test.html');
     send(str);
 });
 
 app.post('/notify', function (req, res) {
 
     var options = {
-        from: 'DiscussionThree@gmail.com',
+        from: 'Buzz No Reply <DiscussionThree@gmail.com>',
         to : "u12207871@tuks.co.za",
         Subject: "New Notification",
         plain: "New Buzz Space Notification",
-        html: '<b>New Buzz Space Notification ✔</b>'
+        html: "<b>New Buzz Space Notification </br> Please  <a href='http://www.cs.up.ac.za'>Click Here</a> To see the post</b>"
     }
 
     var str = JSON.stringify(options);
-
+	res.sendfile('test.html');
     send(str);
 });
 
