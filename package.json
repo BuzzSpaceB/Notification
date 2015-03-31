@@ -53,6 +53,7 @@
       "react": "^0.13.1",
       "react-bootstrap": "^0.17.0",
       "scribe-js": "^2.0.4",
-      "serve-favicon": "~2.2.0"
+      "serve-favicon": "~2.2.0",
+	  "node-schedule": "^0.2.6"
     }
 }
