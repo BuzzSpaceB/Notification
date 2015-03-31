@@ -21,5 +21,28 @@
 		</select>
 		<input name="SendMail" id="like" value="appraise" type="submit" />
 	</form>
+	<br>
+	<hr>
+	<br>
+	<h2>Delete Notification</h2>
+	<form action='/delete' method="POST">
+		Select the thread to be deleted:
+		<select id="threadSelection" name="thread">
+			<option value="root">root</option>
+			<option value="a1">a1</option>
+			<option value="b1">b1</option>
+			<option value="a2">a2</option>
+			<option value="c2">c2</option>
+			<option value="b2">b2</option>
+			<option value="b3">b3</option>
+		</select>
+		<br>
+		Would you like to send a notification about the delete
+		<input type="radio" name="sendNotification" value="true" checked>Yes
+		<input type="radio" name="sendNotification" value="false">No
+		<br>
+		<br>
+		<input name="SendMail" id="like" value="Delete" type="submit" />
+	</form>
 </body>
 </html>

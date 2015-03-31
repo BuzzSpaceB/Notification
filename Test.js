@@ -43,6 +43,21 @@ app.post('/notify', function (req, res) {
     send(str);
 });
 
+app.post('/delete', function (req, res) {
+    var sendNotification = req.body.sendNotification;
+    var threadName = req.body.thread;
+
+    var options = {
+    	sendRequest: sendNotification,
+    	thread: threadName
+    }
+
+    var str = JSON.stringify(options);
+        res.sendfile('test.html');
+    console.log(str);
+    // send(str);
+});
+
 //Gets the specific action and opens the html page
 app.get('/', function (req, res) {
     res.sendfile('test.html');
