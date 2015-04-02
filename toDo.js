@@ -39,8 +39,14 @@ function StandardNotification(obj)//--Xoliswa
 function EditSubscription(obj) //--Izak
 {
 	var details = JSON.parse(obj);
+	//this will Remove or edit subscriptionSchema
 	//Check if the edit is a delete or edit
 	//Perform the edit in the DB (New Thread/Add Users/Remove Users)
+}
+function EditNotificationSettings(obj) //--Izak
+{
+	var details = JSON.parse(obj);
+	//This will change the UserSubscriptionSettings Schema
 }
 //--------------------------------------------------------------------------------------------------------
 /********************************************************************************************************/

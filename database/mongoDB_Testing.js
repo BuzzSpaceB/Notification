@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://197.88.59.172:27017/db'); // connect to database
+mongoose.connect('mongodb://197.88.69.254:27017/db'); // connect to database
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -26,28 +26,34 @@ var notificationSchema = mongoose.Schema (
 {
 	Notification_id: String,
 	Thread_id: String,
-	User_id: String,
+	User_id: String, //user who owns the post
 	TimeAndDate: Date,
 	Type: String,
-	Context: String,
+	Context: String, // Add User who made the appraisail to the context (i.e. Matt has liked your post)
 	Read: Boolean
 });
 
-var subscriptionSchema = mongoose.Schema (
+var UserSubscriptionSettingsSchema = mongoose.Schema (
 {
 	User_id: String,
-	registeredTo: [String],
-	Thread_id: String,
 	Deletion: Boolean,
 	Appraisal: Boolean,
 	InstantEmail: Boolean,
 	DailyEmail: Boolean
 });
 
+var subscriptionSchema = mongoose.Schema (
+{
+	User_id: String,
+	registeredTo: [String],
+	Thread_id: String
+});
+
 var userModel = mongoose.model("Users", UsersSchema);
 var threadsModel = mongoose.model("Threads", ThreadsSchema);
 var notificationModel = mongoose.model("Notification", notificationSchema);
 var subscriptionModel = mongoose.model("Subscription", subscriptionSchema);
+var UserSubscriptionSettingsModel = mongoose.model("SubscriptionSetting", UserSubscriptionSettingsSchema);
 
 console.log(add());
 function add()
@@ -273,11 +279,7 @@ function add()
 	{
 		User_id: "Matt",
 		registeredTo: ["All"],
-		Thread_id: "root",
-		Deletion: "false",
-		Appraisal: "true",
-		InstantEmail: "true",
-		DailyEmail: "false"
+		Thread_id: "root"
 	});
 	newSubscription.save(function (err, newSubscription) 
 	{
@@ -295,11 +297,7 @@ function add()
 	{
 		User_id: "Izak",
 		registeredTo: ["Liz"],
-		Thread_id: "root",
-		Deletion: "true",
-		Appraisal: "false",
-		InstantEmail: "true",
-		DailyEmail: "false"
+		Thread_id: "root"
 	});
 	newSubscription.save(function (err, newSubscription) 
 	{
@@ -317,11 +315,7 @@ function add()
 	{
 		User_id: "Andre",
 		registeredTo: ["Liz","Izak"],
-		Thread_id: "b1",
-		Deletion: "false",
-		Appraisal: "true",
-		InstantEmail: "true",
-		DailyEmail: "false"
+		Thread_id: "b1"
 	});
 	newSubscription.save(function (err, newSubscription) 
 	{
@@ -339,11 +333,7 @@ function add()
 	{
 		User_id: "Liz",
 		registeredTo: ["Andre","Izak"],
-		Thread_id: "c2",
-		Deletion: "false",
-		Appraisal: "true",
-		InstantEmail: "true",
-		DailyEmail: "false"
+		Thread_id: "c2"
 	});
 	newSubscription.save(function (err, newSubscription) 
 	{
@@ -361,11 +351,7 @@ function add()
 	{
 		User_id: "Xoliswa",
 		registeredTo: ["Andre","Izak","Matt"],
-		Thread_id: "root",
-		Deletion: "false",
-		Appraisal: "true",
-		InstantEmail: "true",
-		DailyEmail: "false"
+		Thread_id: "root"
 	});
 	newSubscription.save(function (err, newSubscription) 
 	{
@@ -380,7 +366,220 @@ function add()
 		}
 	});
 /********************************************************************************************************************************************************************/
-//Test Data for Notification is left out as Notifications will be added to the table as events occur.
+/****************************************************ADDING TEST SUBSCRIPTION Settings************************************************************************************/
+	var newSubscriptionSetting = new UserSubscriptionSettingsModel(
+	{
+		User_id: "Matt",
+		Deletion: false,
+		Appraisal: true,
+		InstantEmail: false,
+		DailyEmail: true
+	});
+	newSubscriptionSetting.save(function (err, newSubscriptionSetting) 
+	{
+		if (err) 
+		{ 
+			success = false;
+			console.log("Error Adding Matt Subscription Setting");
+		}
+		else 
+		{
+			success = true;
+		}
+	});
+	newSubscriptionSetting = new UserSubscriptionSettingsModel(
+	{
+		User_id: "Izak",
+		Deletion: false,
+		Appraisal: true,
+		InstantEmail: false,
+		DailyEmail: true
+	});
+	newSubscriptionSetting.save(function (err, newSubscriptionSetting) 
+	{
+		if (err) 
+		{
+			success = false;
+			console.log("Error Adding Izak Subscription Setting");
+		}
+		else 
+		{
+			success = true;
+		}
+	});
+	newSubscriptionSetting = new UserSubscriptionSettingsModel(
+	{
+		User_id: "Andre",
+		Deletion: false,
+		Appraisal: true,
+		InstantEmail: false,
+		DailyEmail: true
+	});
+	newSubscriptionSetting.save(function (err, newSubscriptionSetting) 
+	{
+		if (err) 
+		{	
+			success = false;
+			console.log("Error Adding Andre Subscription Setting");
+		}
+		else 
+		{
+			success = true;
+		}
+	});
+	newSubscriptionSetting = new UserSubscriptionSettingsModel(
+	{
+		User_id: "Liz",
+		Deletion: false,
+		Appraisal: true,
+		InstantEmail: false,
+		DailyEmail: true
+	});
+	newSubscriptionSetting.save(function (err, newSubscriptionSetting) 
+	{
+		if (err) 
+		{
+			success = false;
+			console.log("Error Adding Liz Subscription Setting");
+		}
+		else 
+		{
+			success = true;
+		}
+	});
+	newSubscriptionSetting = new UserSubscriptionSettingsModel(
+	{
+		User_id: "Xoliswa",
+		Deletion: false,
+		Appraisal: true,
+		InstantEmail: false,
+		DailyEmail: true
+	});
+	newSubscriptionSetting.save(function (err, newSubscriptionSetting) 
+	{
+		if (err) 
+		{
+			success = false;
+			console.log("Error Adding Xoliswa Subscription Setting");
+		}
+		else 
+		{
+			success = true;
+		}
+	});
+/********************************************************************************************************************************************************************/
+/****************************************************ADDING TEST NOTIFICATION DATA************************************************************************************/
+	var newNotif = new notificationModel(
+	{
+		Notification_id: "Notif1",
+		Thread_id: "a2",
+		User_id: "Matt",
+		TimeAndDate: new Date(),
+		Type: "Appraisal",
+		Context: "Like",
+		Read: false
+	});
+	newNotif.save(function(err,newNotif)
+	{
+		if (err) 
+		{
+			success = false;
+			console.log("Error Adding Notification 1");
+		}
+		else 
+		{
+			success = true;
+		}
+	});
+	var newNotif = new notificationModel(
+	{
+		Notification_id: "Notif2",
+		Thread_id: "a2",
+		User_id: "Liz",
+		TimeAndDate: new Date(),
+		Type: "New Post",
+		Context: "",
+		Read: false
+	});
+	newNotif.save(function(err,newNotif)
+	{
+		if (err) 
+		{
+			success = false;
+			console.log("Error Adding Notification 2");
+		}
+		else 
+		{
+			success = true;
+		}
+	});
+	var newNotif = new notificationModel(
+	{
+		Notification_id: "Notif3",
+		Thread_id: "c1",
+		User_id: "Andre",
+		TimeAndDate: new Date(),
+		Type: "Delete",
+		Context: "",
+		Read: false
+	});
+	newNotif.save(function(err,newNotif)
+	{
+		if (err) 
+		{
+			success = false;
+			console.log("Error Adding Notification 3");
+		}
+		else 
+		{
+			success = true;
+		}
+	});
+	var newNotif = new notificationModel(
+	{
+		Notification_id: "Notif4",
+		Thread_id: "a1",
+		User_id: "Izak",
+		TimeAndDate: new Date(),
+		Type: "Appraisal",
+		Context: "Funny",
+		Read: false
+	});
+	newNotif.save(function(err,newNotif)
+	{
+		if (err) 
+		{
+			success = false;
+			console.log("Error Adding Notification 4");
+		}
+		else 
+		{
+			success = true;
+		}
+	});
+	var newNotif = new notificationModel(
+	{
+		Notification_id: "Notif5",
+		Thread_id: "root",
+		User_id: "Izak",
+		TimeAndDate: new Date(),
+		Type: "new Post",
+		Context: "",
+		Read: false
+	});
+	newNotif.save(function(err,newNotif)
+	{
+		if (err) 
+		{
+			success = false;
+			console.log("Error Adding Notification 5");
+		}
+		else 
+		{
+			success = true;
+		}
+	});
+/********************************************************************************************************************************************************************/
 	if (success) 
 	{
 		return "Test data added successfully";
