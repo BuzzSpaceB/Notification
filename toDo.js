@@ -60,19 +60,27 @@ function DailyNotification() //--Matt
 
 //NICE TO HAVE
 /********************************************************************************************************/
+//Expects a JSON String containing the User_id of user requesting Notifications
 function GetWebNotifications(obj) 
 {
 	var details = JSON.parse(obj);
-	//Find all WebNotifications associated with a specific user
-	//Compile into a JSON array
-	//Returns JSON ARRAY
-
+	var notifs = Notification.find({User_id: details.User_id},function(err,docs)
+	{
+		var Notifications = new Array();
+		Notifications[0] = {NumberOfNotifications: docs.length};
+		var count = 0;
+		for(var i=1;i<=docs.length;i++)
+		{
+			Notifications[i] = {
+				NotificationType : docs[count].Type,
+				Date : docs[count].TimeAndDate,
+				TextValue : docs[count].Context,
+				Thread_id : docs[count].Thread_id
+			};
+			count++;
+		}
+		console.log(Notifications);
+		return Notifications;
+	});
 }
 //---------------------------------------------------------------------------------------------------------
-/********************************************************************************************************/
-function WebNotification(obj)
-{
-	var details = JSON.parse(obj);
-	//Add the Notification to a DB to be displayed via the Web - Read -- Default ON
-}
-//--------------------------------------------------------------------------------------------------------

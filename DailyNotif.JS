@@ -1,3 +1,4 @@
+// FROM HERE Not Required, used for testing purposes only
 var send = require('./Email.js');
 var express = require('express'),
     app = express();
@@ -32,6 +33,7 @@ var UsersSchema = mongoose.Schema(
 var userModel = mongoose.model("Users", UsersSchema);
 var Notification = mongoose.model('Notification', notificationSchema);
 //CheckDB(); //USED for testing purposes (Send the email now rather than wait for midnight)
+//*******************************************************************************************TO HERE
 var options = new Array();
 var emailCount = 0;
 function CheckDB()
@@ -120,5 +122,6 @@ rule.minute = 00;
 console.log(new Date());
 var j = schedule.scheduleJob(rule, function()
 {
-    console.log('I Logger at Midnight' + new Date());
+    console.log('I Logged at Midnight' + new Date());
+	CheckDB();
 });
