@@ -3,7 +3,7 @@ var express = require('express'),
     app = express();
 var schedule = require('node-schedule');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://197.88.59.90:27017/db'); // connect to database
+mongoose.connect('mongodb://197.88.69.254:27017/db'); // connect to database
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -31,8 +31,9 @@ var UsersSchema = mongoose.Schema(
 
 var userModel = mongoose.model("Users", UsersSchema);
 var Notification = mongoose.model('Notification', notificationSchema);
-CheckDB();
+//CheckDB(); //USED for testing purposes (Send the email now rather than wait for midnight)
 var options = new Array();
+var emailCount = 0;
 function CheckDB()
 {
 	
@@ -41,44 +42,78 @@ function CheckDB()
 		
 		for(var i=0;i<docs.length;i++)
 		{
-			console.log(i+": "+docs[i].User_id);
-			var curr = docs[i].User_id;
-			var inList = false;
-			for(var j = 0; j < options.length;j++)
+
+			var users = userModel.find({User_id:docs[i].User_id},function(err,docs1)
 			{
-				if(curr == options[j].to)
-				{
-					options[j].plain+="\n" + docs[i].TimeAndDate + " " + docs[i].Type + " "  + docs[i].Context;
-					options[j].html+="<br>" + docs[i].TimeAndDate + " <b>" + docs[i].Type + "</b> "  + docs[i].Context
-					inList = true;
-				}
-			}
-			if(!inList)
-			{
-				options[i] = 
+				options[emailCount] = 
 				{
 					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-					to : docs[i].User_id,                        //Change this to the email addess you want to receive the email. This will eventually be the user's email.
-					Subject: "New Daily Notification",
-					plain: "You have the following unread Notifications: \n" + docs[i].TimeAndDate + " " + docs[i].Type + " "  + docs[i].Context,
-					html: "You have the following <b>unread</b> Notifications: <br>" + docs[i].TimeAndDate + " <b>" + docs[i].Type + "</b> "  + docs[i].Context
-				}
-			}
-		}
-		for(var i = 0;i<options.length;i++ )
-		{
-			var users = userModel.find({User_id:options[i].to},function(err,docs)
+					to : docs1[0].PreferredEmail,               //Change this to the email addess you want to receive the email. This will eventually be the user's email.
+					subject: "New Daily Notification",
+					plain: docs[emailCount].TimeAndDate + " " + docs[emailCount].Type + " "  + docs[emailCount].Context,
+					html: docs[emailCount].TimeAndDate + " <b>" + docs[emailCount].Type + "</b> "  + docs[emailCount].Context
+				};
+				addEmail(JSON.stringify(options[emailCount]));
+				emailCount++;
+				if(emailCount == (docs.length))
 				{
-					console.log("User: " + docs[0].User_id + " EMAIL: " + docs[0].PreferredEmail);
-					console.log(JSON.stringify(options[i])); //********************************************************HERE the problem lies
-					options[i].to = docs[0].PreferredEmail;
-				});
+					addEmail("DONE");
+				}
+			});
+			
+		}
+		
+		for(var i = 0;i<options.length;i++)
+		{
+			
 		}
 		
 	});
 }
-
-
+var toSend = new Array();
+var count = 0;
+function addEmail(mess)
+{
+	if(mess == "DONE")
+	{
+		for(var i = 0; i < count;i++)
+		{
+			for(var j = i+1;j<count;j++)
+			{
+				if(toSend[i].to == toSend[j].to)
+				{
+					toSend[i].plain += "\n" + toSend[j].plain;
+					toSend[i].html += "<br>" + toSend[j].html;
+					toSend[j].to = "";
+					toSend[j].from = "";
+					toSend[j].subject = "";
+					toSend[j].plain = "";
+					toSend[j].html = ""; // Remove the Duplicate
+				}
+				else
+				{
+					
+				}
+			}
+		}
+		for(var i=0; i < count;i++)
+		{
+			if(toSend[i].to != "")
+			{
+				console.log(i);
+				toSend[i].plain = "You have the following unread Notifications: \n" + toSend[i].plain;
+				toSend[i].html = "You have the following <b>unread</b> Notifications: <br>" + toSend[i].html;
+				var str = JSON.stringify(toSend[i]);
+				send(str);
+			}	
+		}
+	}
+	else
+	{
+		toSend[count] = JSON.parse(mess);
+		count++;
+	}
+}
 var rule = new schedule.RecurrenceRule();
 rule.hour = 00;
 rule.minute = 00;
