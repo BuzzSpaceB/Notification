@@ -58,24 +58,31 @@ var notificationModel = mongoose.model("Notification", notificationSchema);
 var subscriptionModel = mongoose.model("Subscription", subscriptionSchema);
 var UserSubscriptionSettingsModel = mongoose.model("SubscriptionSetting", UserSubscriptionSettingsSchema);
 
-//variable to store required info
+//global variable to store required info
 var userList = [];
 var parentThread;
+var currentSessionUser = "Andre"; //Varibale for storing the current logged in user
+var details;
+var user;
 
 //actual function
 module.exports = function deleteNotification(obj) {
-	var details = JSON.parse(obj);
-
+	details = JSON.parse(obj);
 	userList = [];
 
 	console.log(details);
 
 	if (details.sendRequest === 'true') {
-		console.log('Start of delete notificaiotn creation');
+		console.log('Start of Delete Notification creation');
 
-		getUserList(details.thread);	
+		// subscriptionModel.find({Thread_id: details.thread}, function(err, docs)
+		// {
+		// 	parentThread = docs[0].Parent_id;
 
-		// console.log(userList);
+		// 	getUserList(parentThread);
+		// });
+
+		getUserList(details.thread);
 	} else {
 		console.log('Delete Notification not requested');
 	}
@@ -109,9 +116,26 @@ function getUserList(thread) {
 
 						getUserList(parentThread);
 					});
-				}
+				} else {
+					console.log('Reached root');
 
-				console.log(userList);
+					for (var i in userList) {
+						var user = userList[i];
+
+						console.log(user);
+
+						var options = {
+							from: 'Buzz No Reply <DiscussionThree@gmail.com>',
+							to : "u13020006@tuks.co.za",
+							Subject: "New Deletion Notification",
+							plain: "New Buzz Space Deletion Notification" + currentSessionUser + " has delete the post by " + user + " for the following reason: " + details.reason,
+							html: "New Buzz Space Deletion Notification <br>" + currentSessionUser + " has delete the post by " + user + " for the following reason: " + details.reason
+						}
+
+						var str = JSON.stringify(options);
+						send(str);
+					}
+				}
 			}
 		});
 	}

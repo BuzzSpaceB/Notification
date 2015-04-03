@@ -47,10 +47,12 @@ app.post('/notify', function (req, res) {
 app.post('/delete', function (req, res) {
     var sendNotification = req.body.sendNotification;
     var threadName = req.body.thread;
+    var msg = req.body.message;
 
     var options = {
     	sendRequest: sendNotification,
-    	thread: threadName
+    	thread: threadName,
+    	reason: msg
     }
 
     var str = JSON.stringify(options);
