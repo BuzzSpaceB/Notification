@@ -30,8 +30,18 @@ var UsersSchema = mongoose.Schema(
 	PreferredEmail: String
 });
 
+var UserSubscriptionSettingsSchema = mongoose.Schema (
+{
+	User_id: String,
+	Deletion: Boolean,
+	Appraisal: Boolean,
+	InstantEmail: Boolean,
+	DailyEmail: Boolean
+});
+
 var userModel = mongoose.model("Users", UsersSchema);
 var Notification = mongoose.model('Notification', notificationSchema);
+var UserSubscriptionSettingsModel = mongoose.model("SubscriptionSetting", UserSubscriptionSettingsSchema);
 //CheckDB(); //USED for testing purposes (Send the email now rather than wait for midnight)
 //*******************************************************************************************TO HERE
 var options = new Array();
@@ -45,12 +55,12 @@ function CheckDB()
 		for(var i=0;i<docs.length;i++)
 		{
 
-			var users = userModel.find({User_id:docs[i].User_id},function(err,docs1)
+			var subs = UserSubscriptionSettingsModel.find({User_id:docs[i].User_id, DailyEmail:true},function(err,docs1)
 			{
 				options[emailCount] = 
 				{
 					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-					to : docs1[0].User_id+"@tuks.co.za",               //Change this to the LDAP Email if possible
+					to : docs[emailCount].User_id+"@tuks.co.za",               //Change this to the LDAP Email if possible
 					subject: "New Daily Notification",
 					plain: docs[emailCount].TimeAndDate + " " + docs[emailCount].Type + " "  + docs[emailCount].Context,
 					html: docs[emailCount].TimeAndDate + " <b>" + docs[emailCount].Type + "</b> "  + docs[emailCount].Context
