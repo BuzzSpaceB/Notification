@@ -2,110 +2,38 @@
  * RegisterForNotification core functionality
  * Author: Izak Blom
  * Group: NotificationB
- * Modified: 23/03/2015
+ * Modified: 03/04/2015
  */
 
-/*********************************************************************************
- *
- *      Only for testing purposes. Implementation specific to caller
- */
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/mydb'); // conncect to database
-
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function (callback) {
-});
-
-var UsersSchema = mongoose.Schema({
-    User_id: String,
-    PreferredEmail: String
-});
-//*******************************************************************************
-
-/*
- var userModel = mongoose.model("Users", UsersSchema);
-
- var testUser = new userM({User_id: 'user1', PreferredEmail: 'testMail@gmail.com'});
-
- testUser.save(function (err, testUser) {
- if (err) return console.error(err)
- });*/
-
-/*
- var ThreadsSchema = mongoose.Schema({
- Thread_id: String,
- user_id: String
- });
-
- var threadsModel = mongoose.model("Threads", ThreadsSchema);
-
- var testThread = new threadsM({Thread_id: 'testThread1', user_id: 'user1'});
-
- testThread.save(function (err, testThread) {
- if (err) return console.error(err)
- });
- */
-
-/*
- var notificationSchema = mongoose.Schema ({
- Notification_id: String,
- Thread_id: String,
- User_id: String,
- TimeAndDate: Date,
- Type: String,
- Context: String,
- Read: Boolean
- });
-
- var notificationModel = mongoose.model("Notification", notificationSchema);
-
- var testNotification = new notificationModel({Notification_id: "notification1", Thread_id: "testThread1",
- User_id: "user1", TimeAndDate: new Date(), Type: "Appraisal", Context: "", Read: false});
+/********************************************************
+ * Function intended to add a subscription to a thread or users to the database using a JSON as parameter
+ * Checks data validity, BUT DOES NOT CROSS REFERENCE WITH OTHER SCHEMAS
+ * Inserts a new subscriptionModel document
  */
 
 
-/*
- ********** Core functionality Schema **************
- * Required by registerForNotification() for inserting data into Subscription Model
- */
-var subscriptionSchema = mongoose.Schema ({
-    User_id: String,
-    Thread_id: String,
-    Deletion: Boolean,
-    Appraisal: Boolean,
-    InstantEmail: Boolean,
-    DailyEmail: Boolean
-});
+var subscriptionModel;
+var subSettingsModel;
 
-// Create a new subscriptionModel
-var subscriptionModel = mongoose.model("Subscription", subscriptionSchema);
+connectNotificationBDatabase();
 
 
-/*  Use this code to insert a dummy document into subscriptionModel
- var testSubscription = new subscriptionModel({ User_id: 'user1', Thread_id: 'testThread1', Deletion: false, Appraisal: false,
- InstantEmail: false, DailyEmail: false});
-
- testSubscription.save(function (err, testSubscription) {
- if (err) return console.error(err)
- });
- */
-
-// A model for an object to be converted to a JSON string and passed to registerForNotification()
 var subscribeRequest = {
-    UserID: 'testUser',
-    ThreadID: 'Thread1',
-    Deletion: false,
-    Appraisal: false,
-    InstantEmail: false,
-    DailyEmail: false
+    User_id: 'registerTestUser',
+    Thread_id: 'c2',
+    registeredTo: ["Izak", "Matt", "Liz"]
 };
 
 // Convert object subscribeRequest to JSON string
 var RequestString = JSON.stringify(subscribeRequest);
 
-// Call registerForNotifcation with argument RequestString and log the response
-console.log(registerForNotification(RequestString));
+registerForNotification(RequestString, function callback(res){
+    console.log(res);
+    subscriptionModel.find(function (err, subscriptions) {
+        if (err) return console.error(err);
+        console.log(subscriptions);
+    });
+});
 
 
 
@@ -113,40 +41,82 @@ console.log(registerForNotification(RequestString));
  ****** Core functionality function *********
  * Receives a JSON string of the format subscribeRequest above
  * Parses string and inserts the subscription data into the database
+ * * callbackFunction called when async calls within this function have completed. Used instead of return statement which only works synchronously
+ * * returns a result JSON describing the result of the action performed by the function
  */
-function registerForNotification(jsonRequest)
+function registerForNotification(jsonRequest, callbackFunction)
 {
     var req = JSON.parse(jsonRequest);
+    var result; // JSON string containing the result of operation performed by EditSubscription or any errors.
 
-    var newSubscription = new subscriptionModel({User_id: req.UserID, Thread_id: req.ThreadID, Deletion: req.Deletion, Appraisal: req.Appraisal,
-        InstantEmail: req.InstantEmail, DailyEmail: req.DailyEmail});
+    if (req.User_id == null || req.Thread_id == null || req.registeredTo == null)
+    {
+        result =  {resultText:"Incorrect JSON format for registerForNotification(). Specify 'User_id', 'Thread_id', 'registeredTo'"};
+        callbackFunction(result);
+    }
+    else if (typeof req.User_id != 'string')
+    {
+        result =  {resultText:"Incorrect JSON format for registerForNotification(). 'User_id' must be String format"};
+        callbackFunction(result);
+    }
+    else if (typeof req.Thread_id != 'string')
+    {
+        result =  {resultText:"Incorrect JSON format for registerForNotification(). 'Thread_id' must be String format"};
+        callbackFunction(result);
+    }
+    else if (!Array.isArray(req.registeredTo))
+    {
+        result =  {resultText:"Incorrect JSON format for registerForNotification(). 'registeredTo' must be an array"};
+        callbackFunction(result);
+    }
+    else
+    {
+        newSub = new subscriptionModel(
+            {
+                User_id: req.User_id,
+                Thread_id: req.Thread_id,
+                registeredTo: req.registeredTo
+            }
+        );
+        newSub.save(function(err,newSub)
+        {
+            if (err)
+            {
+               result ={resultText: "Failed to register to database. DB error"};
+                callbackFunction(result);
+            }
+            else
+            {
+                result ={resultText: "Successful registration of " + jsonRequest};
+                callbackFunction(result);
+            }
+        });
+    }
+}
 
-    var success = true;
-    // Save the new Document to the database
-    newSubscription.save(function (err, newSubscription) {
-        if (err) success = false;
-        else success = true;
+
+function connectNotificationBDatabase() // Custom function to set up db connection
+{
+    var mongoose = require('mongoose');
+    mongoose.connect('mongodb://197.88.21.137:27017/db'); // connect to database
+
+    db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function (callback)
+    {
 
     });
 
-    if (success)
-    // Return the inserted subscription as JSON string
-        return(JSON.stringify(newSubscription));
-    else return "Error: Unable to create new subscription";
+
+    var subscriptionSchema = mongoose.Schema (
+        {
+            User_id: String,
+            registeredTo: [String],
+            Thread_id: String
+        });
+
+
+    subscriptionModel = mongoose.model("Subscription", subscriptionSchema);
+
 
 }
-
-//  Show all documents in subscription Model, including the one added by registerForNotification()
-subscriptionModel.find(function (err, subscriptions) {
-    if (err) return console.error(err);
-    console.log(subscriptions);
-});
-
-/*******************************************************************
- * Use this code snippet to clear all Documents from these Models
- * *****************************************************************
- userModel.remove().exec();
- subscriptionModel.remove().exec();
- notificationModel.remove().exec();
- threadsModel.remove().exec();
- */
