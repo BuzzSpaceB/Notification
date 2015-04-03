@@ -11,9 +11,9 @@ mongoose.connection.on('error', function (err) {
 });
 /************************************ SCHEMA's*****************************/
 var subscriptionSchema = mongoose.Schema({
-    User_id: String,
+    user_id: String,
 	registeredTo: [String],
-	Thread_id: String
+	thread_id: String
 });
 
 var ThreadSchema = new mongoose.Schema({
@@ -37,7 +37,7 @@ var UserSchema = mongoose.Schema({
 
 var UserSubscriptionSettingsSchema = mongoose.Schema (
 {
-	User_id: String,
+	user_id: String,
 	Deletion: Boolean,
 	Appraisal: Boolean,
 	InstantEmail: Boolean,
@@ -62,10 +62,12 @@ var threadsModel = mongoose.model("Threads",ThreadSchema);
 var notificationModel = mongoose.model("Notification", NotificationSchema);
 var subscriptionModel = mongoose.model("Subscription", subscriptionSchema);
 var UserSubscriptionSettingsModel = mongoose.model("SubscriptionSetting", UserSubscriptionSettingsSchema);
+//UserSubscriptionSettingsModel.remove().exec();
 
 	var success = true;
 /****************************************************ADDING TEST USER DATA************************************************************************************/
-	var newUser = new user(
+
+var newUser = new user(
 	{
 		user_id				: "u11008602",
 		username            : "Matthew",           
@@ -423,7 +425,7 @@ var UserSubscriptionSettingsModel = mongoose.model("SubscriptionSetting", UserSu
 	});
 /********************************************************************************************************************************************************************/
 /****************************************************ADDING TEST SUBSCRIPTION Settings************************************************************************************/
-	var newSubscriptionSetting = new UserSubscriptionSettingsModel(
+    var newSubscriptionSetting = new UserSubscriptionSettingsModel(
 	{
 		user_id: "u11008602",
 		Deletion: true,
@@ -636,7 +638,7 @@ var UserSubscriptionSettingsModel = mongoose.model("SubscriptionSetting", UserSu
 		}
 	});
 /********************************************************************************************************************************************************************/
-	if (success) 
+	if (success)
 	{
 		return "Test data added successfully";
 	}
@@ -652,4 +654,4 @@ var UserSubscriptionSettingsModel = mongoose.model("SubscriptionSetting", UserSu
         console.log("ERR: " + err);
     else
         console.log("Found: " + JSON.stringify(aThread));
-});*/
+});
