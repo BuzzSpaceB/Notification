@@ -2,6 +2,7 @@ var send = require('./Email.js');
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://197.88.21.137:27017/db'); // connect to database
+// mongoose.connect("mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib");
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -62,24 +63,25 @@ var UserSubscriptionSettingsModel = mongoose.model("SubscriptionSetting", UserSu
 var userList = [];
 var parentThread;
 var currentSessionUser = "Andre"; //Varibale for storing the current logged in user
-var details;
-var user;
+var details; //Stores the data for the recieved obj after it has been parsed
+var owner = 'Andre'; //Owner of the deleted thread
+var reachedRoot = false; //Check to see if the root node has been reached 
 
 //actual function
 module.exports = function deleteNotification(obj) {
+	//Reset variables for each call to the function
 	details = JSON.parse(obj);
 	userList = [];
+	reachedRoot = false;
 
-	console.log(details);
+	// console.log(details);
 
 	if (details.sendRequest === 'true') {
 		console.log('Start of Delete Notification creation');
 
-		// subscriptionModel.find({Thread_id: details.thread}, function(err, docs)
+		// threadsModel.find({thread_id: details.thread}, function(err, docs)
 		// {
-		// 	parentThread = docs[0].Parent_id;
-
-		// 	getUserList(parentThread);
+		// 	owner = docs[0].user_id;
 		// });
 
 		getUserList(details.thread);
@@ -89,54 +91,92 @@ module.exports = function deleteNotification(obj) {
 }
 
 //helper functions
-function getUserList(thread) {
+function getUserList(thread, reachedRoot) {
 	if (thread) {
-		console.log('Getting user list for ' + thread);
+		if (reachedRoot === true) {
+			console.log('Reached root with user list:');
+			console.log(userList);
 
-		subscriptionModel.find({Thread_id: thread}, function(err, docs)
-		{
-			if (err) {
-				console.log(err);
-				throw err;
-			}
-			else 
-			{
-				for (var i in docs) {
-					var doc = docs[i];
+			//Send email to each user in the user list
+			for (var i in userList) {
+				var user = userList[i];
 
-					if (userList.indexOf(doc.User_id) < 0) {
-						userList.push(doc.User_id);
-					}
+				var options = {
+					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
+					to : user + "@tuks.co.za",
+					Subject: "New Deletion Notification",
+					plain: "New Buzz Space Deletion Notification" + currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason,
+					html: "New Buzz Space Deletion Notification <br>" + currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason
 				}
 
-				if (thread !== 'root') {
+				var str = JSON.stringify(options);
+				// send(str);
+
+				//Add the notification to the notification db for daily mail use
+				addNewNotification(user);
+			}
+		}
+		else {
+			subscriptionModel.find({Thread_id: thread}, function(err, docs)
+			{
+				if (err) {
+					console.log(err);
+					throw err;
+				}
+				else 
+				{
+					for (var i in docs) {
+						var doc = docs[i];
+
+						if (userList.indexOf(doc.user_id) < 0) {
+							UserSubscriptionSettingsModel.find({User_id: doc.User_id}, function(err, docs)
+							{
+								if (docs[0].Deletion === true) {
+									userList.push(docs[0].User_id);
+								}
+							});
+						}
+					}
+
 					threadsModel.find({Thread_id: thread}, function(err, docs)
 					{
 						parentThread = docs[0].Parent_id;
 
-						getUserList(parentThread);
-					});
-				} else {
-					console.log('Reached root');
-
-					for (var i in userList) {
-						var user = userList[i];
-
-						console.log(user);
-
-						var options = {
-							from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-							to : "u13020006@tuks.co.za",
-							Subject: "New Deletion Notification",
-							plain: "New Buzz Space Deletion Notification" + currentSessionUser + " has delete the post by " + user + " for the following reason: " + details.reason,
-							html: "New Buzz Space Deletion Notification <br>" + currentSessionUser + " has delete the post by " + user + " for the following reason: " + details.reason
+						if (parentThread !== null) {
+							getUserList(parentThread, false);
 						}
-
-						var str = JSON.stringify(options);
-						send(str);
-					}
+						else {
+							getUserList(thread, true);
+						}
+					});
 				}
-			}
-		});
+			});
+		}
 	}
+}
+
+function addNewNotification(user)
+{
+	var newNotif = new notificationModel(
+	{
+		Notification_id: "deletionNotification", //Needs to be made auto incremented
+		Thread_id: details.thread,
+		User_id: user,
+		TimeAndDate: new Date(),
+		Type: "Deletion",
+		Context: currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason,
+		Read: false
+	});
+	newNotif.save(function(err,newNotif)
+	{
+		if (err) 
+		{
+			success = false;
+			console.log("Error Adding Notification ");
+		}
+		else 
+		{
+			success = true;
+		}
+	});
 }
