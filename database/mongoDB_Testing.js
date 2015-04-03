@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://197.88.69.254:27017/db'); // connect to database
+mongoose.connect('mongodb://197.88.21.137:27017/db'); // connect to database
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -370,7 +370,7 @@ function add()
 	var newSubscriptionSetting = new UserSubscriptionSettingsModel(
 	{
 		User_id: "Matt",
-		Deletion: false,
+		Deletion: true,
 		Appraisal: true,
 		InstantEmail: false,
 		DailyEmail: true
@@ -390,7 +390,7 @@ function add()
 	newSubscriptionSetting = new UserSubscriptionSettingsModel(
 	{
 		User_id: "Izak",
-		Deletion: false,
+		Deletion: true,
 		Appraisal: true,
 		InstantEmail: false,
 		DailyEmail: true
@@ -410,7 +410,7 @@ function add()
 	newSubscriptionSetting = new UserSubscriptionSettingsModel(
 	{
 		User_id: "Andre",
-		Deletion: false,
+		Deletion: true,
 		Appraisal: true,
 		InstantEmail: false,
 		DailyEmail: true
