@@ -19,7 +19,7 @@ connectNotificationBDatabase();
 
 // dummy request
 var registerRequest = {
-    User_id: 'registerTestUser',
+    user_id: 'registerTestUser',
     Deletion: false,
     Appraisal: false,
     InstantEmail: false,
@@ -52,14 +52,14 @@ function registerUserNotificationSettings(jsonRequest, callbackFunction)
     var result; // JSON string containing the result of operation performed by EditSubscription or any errors.
 
     // Series of if statements for data validation before insertion into database occurs
-    if (req.User_id == null || req.Deletion == null || req.Appraisal == null || req.InstantEmail == null  || req.DailyEmail == null)
+    if (req.user_id == null || req.Deletion == null || req.Appraisal == null || req.InstantEmail == null  || req.DailyEmail == null)
     {
-        result =  {resultText:"Incorrect JSON format for registerForNotification(). Specify 'User_id', 'InstantEmail', 'Appraisal', 'Deletion', 'DailyEmail'"};
+        result =  {resultText:"Incorrect JSON format for registerForNotification(). Specify 'user_id', 'InstantEmail', 'Appraisal', 'Deletion', 'DailyEmail'"};
         callbackFunction(result);
     }
-    else if (typeof req.User_id != 'string')
+    else if (typeof req.user_id != 'string')
     {
-        result =  {resultText:"Incorrect JSON format for registerForNotification(). 'User_id' must be String format"};
+        result =  {resultText:"Incorrect JSON format for registerForNotification(). 'user_id' must be String format"};
         callbackFunction(result);
     }
     else if (typeof req.Deletion != 'boolean')
@@ -84,10 +84,10 @@ function registerUserNotificationSettings(jsonRequest, callbackFunction)
     }
     else
     {
-        subSettingsModel.findOne({User_id: req.User_id}, function (err, doc){
+        subSettingsModel.findOne({user_id: req.user_id}, function (err, doc){
             if (doc != null)
             {
-                result = {resultString: "A document for user " + req.User_id + "already exists. User function EditNotificationSettings to edit"};
+                result = {resultString: "A document for user " + req.user_id + "already exists. User function EditNotificationSettings to edit"};
                 callbackFunction(result);
             }
             else
@@ -98,7 +98,7 @@ function registerUserNotificationSettings(jsonRequest, callbackFunction)
         {
             newSetting = new subSettingsModel(
                 {
-                    User_id: req.User_id,
+                    user_id: req.user_id,
                     Deletion: req.Deletion,
                     Appraisal: req.Appraisal,
                     InstantEmail: req.InstantEmail,
@@ -114,7 +114,7 @@ function registerUserNotificationSettings(jsonRequest, callbackFunction)
                 }
                 else
                 {
-                    result ={resultText: "Successful registration of settings for " + req.User_id};
+                    result ={resultText: "Successful registration of settings for " + req.user_id};
                     callbackFunction(result);
                 }
             });
@@ -127,7 +127,7 @@ function registerUserNotificationSettings(jsonRequest, callbackFunction)
 function connectNotificationBDatabase() // Custom function to set up db connection
 {
     var mongoose = require('mongoose');
-    mongoose.connect('mongodb://197.88.21.137:27017/db'); // connect to database
+    mongoose.connect('mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib'); // connect to database
 
     db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
@@ -138,7 +138,7 @@ function connectNotificationBDatabase() // Custom function to set up db connecti
 
     var subSettingsSchema = mongoose.Schema (
         {
-            User_id: String,
+            user_id: String,
             Deletion: Boolean,
             Appraisal: Boolean,
             InstantEmail: Boolean,

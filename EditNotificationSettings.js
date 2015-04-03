@@ -14,29 +14,29 @@ connectNotificationBDatabase();
 // dummy request variable
 var editDeletionRequest = {
     editWhat: "Deletion",
-    User_id: "Izak",
+    user_id: "Izak",
     SetAs: false
 };
 
 // dummy request variable
 var editAppraisalRequest = {
     editWhat: "Appraisal",
-    User_id: "Izak",
+    user_id: "Izak",
     SetAs: true
 };
 
 // dummy request variable
 var editInstantEmailRequest = {
     editWhat: "InstantEmail",
-    User_id: "Izak",
+    user_id: "Izak",
     SetAs: false
 };
 
 // dummy request variable
 var editDailyEmailRequest = {
     editWhat: "DailyEmail",
-    User_id: "Izak",
-    SetAs: false
+    user_id: "u11008602",
+    SetAs: true
 };
 
 
@@ -59,9 +59,9 @@ function EditNotificationSettings(obj, doneFunction) // doneFunction is called w
     var result; // JSON string containing the result of operation performed by EditSubscription or any errors.
     var details = JSON.parse(obj);
 
-    if (details.editWhat == null || details.SetAs == null || details.User_id == null)
+    if (details.editWhat == null || details.SetAs == null || details.user_id == null)
     {
-        result =  {resultText:"Incorrect JSON format for EditNotificationSettings(). Specify 'editWhat', 'SetAs', 'User_id'"};
+        result =  {resultText:"Incorrect JSON format for EditNotificationSettings(). Specify 'editWhat', 'SetAs', 'user_id'"};
         doneFunction(result);
     }
     else if (details.editWhat != "Deletion" && details.editWhat != "Appraisal" && details.editWhat != "InstantEmail" && details.editWhat != "DailyEmail")
@@ -76,10 +76,10 @@ function EditNotificationSettings(obj, doneFunction) // doneFunction is called w
     }
     else if (details.editWhat == "Deletion")
     {
-       subSettingsModel.findOne({User_id: details.User_id}, function (err, doc){
+       subSettingsModel.findOne({user_id: details.user_id}, function (err, doc){
            if (doc == null)
            {
-               result =  {resultText:"No users matching Thread_id and User_id specified in " + obj};
+               result =  {resultText:"No users matching thread_id and user_id specified in " + obj};
                doneFunction(result);
            }
            else
@@ -92,10 +92,10 @@ function EditNotificationSettings(obj, doneFunction) // doneFunction is called w
     }
     else if (details.editWhat == "Appraisal")
     {
-        subSettingsModel.findOne({User_id: details.User_id}, function (err, doc){
+        subSettingsModel.findOne({user_id: details.user_id}, function (err, doc){
             if (doc == null)
             {
-                result =  {resultText:"No users matching Thread_id and User_id specified in " + obj};
+                result =  {resultText:"No users matching thread_id and user_id specified in " + obj};
                 doneFunction(result);
             }
             else
@@ -108,10 +108,10 @@ function EditNotificationSettings(obj, doneFunction) // doneFunction is called w
     }
     else if (details.editWhat == "InstantEmail")
     {
-        subSettingsModel.findOne({User_id: details.User_id}, function (err, doc){
+        subSettingsModel.findOne({user_id: details.user_id}, function (err, doc){
             if (doc == null)
             {
-                result =  {resultText:"No users matching Thread_id and User_id specified in " + obj};
+                result =  {resultText:"No users matching thread_id and user_id specified in " + obj};
                 doneFunction(result);
             }
             else
@@ -124,10 +124,10 @@ function EditNotificationSettings(obj, doneFunction) // doneFunction is called w
     }
     else if (details.editWhat == "DailyEmail")
     {
-        subSettingsModel.findOne({User_id: details.User_id}, function (err, doc){
+        subSettingsModel.findOne({user_id: details.user_id}, function (err, doc){
             if (doc == null)
             {
-                result =  {resultText:"No users matching Thread_id and User_id specified in " + obj};
+                result =  {resultText:"No users matching thread_id and user_id specified in " + obj};
                 doneFunction(result);
             }
             else
@@ -144,7 +144,7 @@ function EditNotificationSettings(obj, doneFunction) // doneFunction is called w
 function connectNotificationBDatabase() // Custom function to set up db connection
 {
     var mongoose = require('mongoose');
-    mongoose.connect('mongodb://197.88.21.137:27017/db'); // connect to database
+    mongoose.connect('mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib'); // connect to database
 
     db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
@@ -156,7 +156,7 @@ function connectNotificationBDatabase() // Custom function to set up db connecti
 
     var subSettingsSchema = mongoose.Schema (
         {
-            User_id: String,
+            user_id: String,
             Deletion: Boolean,
             Appraisal: Boolean,
             InstantEmail: Boolean,

@@ -14,48 +14,48 @@ connectNotificationBDatabase();
 // dummy request variable
 var deleteSubscriptionRequest = {
     Type: "Delete",
-    User_id: "Liz",
-    Thread_id: "c2"
+    user_id: "Matt",
+    thread_id: "root"
 };
 
 // dummy request variable
 var editThreadIDRequest = {
     Type: "Edit",
-    EditAction: "EditThread_id",
-    User_id: "Liz",
-    oldThread_id: "c2",
-    newThread_id: "c5"
+    EditAction: "Editthread_id",
+    user_id: "Liz",
+    oldthread_id: "c2",
+    newthread_id: "c5"
 };
 
 // dummy request variable
 var AddRegisteredToRequest = {
     Type: "Edit",
     EditAction: "AddRegTo",
-    User_id: "Liz",
-    newRegisteredTo: "Andre",
-    Thread_id: 'c2'
+    user_id: "u13126777",
+    newRegisteredTo: "u11008602",
+    thread_id: 'root'
 };
 
 // dummy request variable
 var DeleteRegisteredToRequest = {
     Type: "Edit",
     EditAction: "DeleteRegTo",
-    User_id: "Liz",
+    user_id: "Liz",
     delete: "Matt",
-    Thread_id: 'c2'
+    thread_id: 'c2'
 };
 
 // dummy request variable
 var clearRegisteredToRequest = {
     Type: "Edit",
     EditAction: "ClearRegTo",
-    User_id: "Liz",
-    Thread_id: "c2"
+    user_id: "Liz",
+    thread_id: "c2"
 };
 
 // callback used to retrieve result of EditSubscription function
 // example of how to call EditSubscription
-EditSubscription(JSON.stringify(DeleteRegisteredToRequest), function callback(res){
+EditSubscription(JSON.stringify(AddRegisteredToRequest), function callback(res){
     // do whatever with res which is the result of EditSubscription
     console.log(res);
     subscriptionModel.find(function (err, subscriptions) {
@@ -63,7 +63,6 @@ EditSubscription(JSON.stringify(DeleteRegisteredToRequest), function callback(re
         console.log(subscriptions);
     });
 });
-
 
 
 function EditSubscription(obj, doneFunction) // doneFunction is called when asynchronous calls withing EditSubscription have completed. Used instead of return statement
@@ -78,14 +77,14 @@ function EditSubscription(obj, doneFunction) // doneFunction is called when asyn
     }
     else if (details.Type == 'Delete') // Handle Deletion Request
     {
-        if (details.Thread_id == null || details.User_id == null)   // Missing parameters in JSON obj
+        if (details.thread_id == null || details.user_id == null)   // Missing parameters in JSON obj
         {
-            result = {resultText: "Incorrect JSON format for Delete. Match {'Type':'Delete','User_id':'uid','Thread_id':'thID'}"};
+            result = {resultText: "Incorrect JSON format for Delete. Match {'Type':'Delete','user_id':'uid','thread_id':'thID'}"};
             doneFunction(result);
         }
         else
         {
-            subscriptionModel.findOne({User_id: details.User_id, Thread_id: details.Thread_id}, function (err, doc){
+            subscriptionModel.findOne({user_id: details.user_id, thread_id: details.thread_id}, function (err, doc){
                 if (doc == null)
                 {
                     result =  {resultText:"Error removing " + obj};
@@ -104,22 +103,22 @@ function EditSubscription(obj, doneFunction) // doneFunction is called when asyn
     else if (details.Type == 'Edit')    // Handle Edit Request
     {
         // Missing parameters in JSON obj
-        if (details.EditAction == null || (details.EditAction != "EditThread_id" && details.EditAction != "AddRegTo" && details.EditAction != "DeleteRegTo" && details.EditAction != "ClearRegTo"))
+        if (details.EditAction == null || (details.EditAction != "Editthread_id" && details.EditAction != "AddRegTo" && details.EditAction != "DeleteRegTo" && details.EditAction != "ClearRegTo"))
         {
-            result = {resultText: "Incorrect JSON format for Edit. No EditAction specified. Choose 'EditThread_id/AddRegTo/DeleteRegTo/ClearRegTo'"};
+            result = {resultText: "Incorrect JSON format for Edit. No EditAction specified. Choose 'Editthread_id/AddRegTo/DeleteRegTo/ClearRegTo'"};
             doneFunction(result);
         }
-        else if (details.EditAction == "EditThread_id")
+        else if (details.EditAction == "Editthread_id")
         {
-            if (details.oldThread_id == null || details.newThread_id == null || details.User_id == null) // Missing parameters in JSON obj
+            if (details.oldthread_id == null || details.newthread_id == null || details.user_id == null) // Missing parameters in JSON obj
             {
-                result = {resultText: "Incorrect JSON format for 'EditThread_id'. Please specify oldThread_id, newThread_id and User_id"};
+                result = {resultText: "Incorrect JSON format for 'Editthread_id'. Please specify oldthread_id, newthread_id and user_id"};
                 doneFunction(result);
             }
             else
             {
-                var conditions = {User_id: details.User_id, Thread_id: details.oldThread_id};
-                var update = {Thread_id: details.newThread_id};
+                var conditions = {user_id: details.user_id, thread_id: details.oldthread_id};
+                var update = {thread_id: details.newthread_id};
 
                 subscriptionModel.update(conditions, update, {multi: false}, callback);
 
@@ -135,17 +134,17 @@ function EditSubscription(obj, doneFunction) // doneFunction is called when asyn
         }
         else if (details.EditAction == "AddRegTo")
         {
-            if (details.User_id == null || details.newRegisteredTo == null || details.Thread_id == null) // Missing parameters in JSON obj
+            if (details.user_id == null || details.newRegisteredTo == null || details.thread_id == null) // Missing parameters in JSON obj
             {
-                result = {resultText: "Incorrect JSON format for 'AddRegTo'. Please specify 'User_id', 'Thread_id' and 'newRegisteredTo'"};
+                result = {resultText: "Incorrect JSON format for 'AddRegTo'. Please specify 'user_id', 'thread_id' and 'newRegisteredTo'"};
                 doneFunction(result);
             }
             else
             {
-                subscriptionModel.findOne({User_id: details.User_id, Thread_id: details.Thread_id}, function (err, doc){
+                subscriptionModel.findOne({user_id: details.user_id, thread_id: details.thread_id}, function (err, doc){
                     if (doc == null)
                     {
-                        result =  {resultText:"No users matching Thread_id and User_id specified in " + obj};
+                        result =  {resultText:"No users matching thread_id and user_id specified in " + obj};
                         doneFunction(result);
                     }
                     else
@@ -177,17 +176,17 @@ function EditSubscription(obj, doneFunction) // doneFunction is called when asyn
         }
         else if (details.EditAction == "DeleteRegTo")
         {
-            if (details.User_id == null || details.delete == null || details.Thread_id == null) // Missing parameters in JSON obj
+            if (details.user_id == null || details.delete == null || details.thread_id == null) // Missing parameters in JSON obj
             {
-                result = {resultText: "Incorrect JSON format for 'DeleteRegTo'. Please specify 'User_id', 'Thread_id' and 'delete'"};
+                result = {resultText: "Incorrect JSON format for 'DeleteRegTo'. Please specify 'user_id', 'thread_id' and 'delete'"};
                 doneFunction(result);
             }
             else
             {
-                subscriptionModel.findOne({User_id: details.User_id, Thread_id: details.Thread_id}, function (err, doc){
+                subscriptionModel.findOne({user_id: details.user_id, thread_id: details.thread_id}, function (err, doc){
                     if (doc == null)
                     {
-                        result =  {resultText:"No users matching Thread_id and User_id specified in " + obj};
+                        result =  {resultText:"No users matching thread_id and user_id specified in " + obj};
                         doneFunction(result);
                     }
                     else
@@ -215,17 +214,17 @@ function EditSubscription(obj, doneFunction) // doneFunction is called when asyn
         }
         else if (details.EditAction == "ClearRegTo")
         {
-            if (details.User_id == null || details.Thread_id == null) // Missing parameters in JSON obj
+            if (details.user_id == null || details.thread_id == null) // Missing parameters in JSON obj
             {
-                result = {resultText: "Incorrect JSON format for 'AddRegTo'. Please specify 'User_id', 'Thread_id'"};
+                result = {resultText: "Incorrect JSON format for 'AddRegTo'. Please specify 'user_id', 'thread_id'"};
                 doneFunction(result);
             }
             else
             {
-                subscriptionModel.findOne({User_id: details.User_id, Thread_id: details.Thread_id}, function (err, doc){
+                subscriptionModel.findOne({user_id: details.user_id, thread_id: details.thread_id}, function (err, doc){
                     if (doc == null)
                     {
-                        result =  {resultText:"No users matching Thread_id and User_id specified in " + obj};
+                        result =  {resultText:"No users matching thread_id and user_id specified in " + obj};
                         doneFunction(result);
                     }
                     else
@@ -251,21 +250,21 @@ function EditSubscription(obj, doneFunction) // doneFunction is called when asyn
 function connectNotificationBDatabase() // Custom function to set up db connection
 {
     var mongoose = require('mongoose');
-    mongoose.connect('mongodb://197.88.21.137:27017/db'); // connect to database
+    mongoose.connect('mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib'); // connect to database
 
     db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function (callback)
     {
-        
+
     });
 
 
     var subscriptionSchema = mongoose.Schema (
         {
-            User_id: String,
+            user_id: String,
             registeredTo: [String],
-            Thread_id: String
+            thread_id: String
         });
 
 

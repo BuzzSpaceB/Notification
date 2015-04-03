@@ -13,14 +13,14 @@
 
 
 var subscriptionModel;
-var subSettingsModel;
+
 
 connectNotificationBDatabase();
 
 
 var subscribeRequest = {
-    User_id: 'registerTestUser',
-    Thread_id: 'c2',
+    user_id: 'registerTestUser',
+    thread_id: 'c2',
     registeredTo: ["Izak", "Matt", "Liz"]
 };
 
@@ -49,19 +49,19 @@ function registerForNotification(jsonRequest, callbackFunction)
     var req = JSON.parse(jsonRequest);
     var result; // JSON string containing the result of operation performed by EditSubscription or any errors.
 
-    if (req.User_id == null || req.Thread_id == null || req.registeredTo == null)
+    if (req.user_id == null || req.thread_id == null || req.registeredTo == null)
     {
-        result =  {resultText:"Incorrect JSON format for registerForNotification(). Specify 'User_id', 'Thread_id', 'registeredTo'"};
+        result =  {resultText:"Incorrect JSON format for registerForNotification(). Specify 'user_id', 'thread_id', 'registeredTo'"};
         callbackFunction(result);
     }
-    else if (typeof req.User_id != 'string')
+    else if (typeof req.user_id != 'string')
     {
-        result =  {resultText:"Incorrect JSON format for registerForNotification(). 'User_id' must be String format"};
+        result =  {resultText:"Incorrect JSON format for registerForNotification(). 'user_id' must be String format"};
         callbackFunction(result);
     }
-    else if (typeof req.Thread_id != 'string')
+    else if (typeof req.thread_id != 'string')
     {
-        result =  {resultText:"Incorrect JSON format for registerForNotification(). 'Thread_id' must be String format"};
+        result =  {resultText:"Incorrect JSON format for registerForNotification(). 'thread_id' must be String format"};
         callbackFunction(result);
     }
     else if (!Array.isArray(req.registeredTo))
@@ -73,8 +73,8 @@ function registerForNotification(jsonRequest, callbackFunction)
     {
         newSub = new subscriptionModel(
             {
-                User_id: req.User_id,
-                Thread_id: req.Thread_id,
+                user_id: req.user_id,
+                thread_id: req.thread_id,
                 registeredTo: req.registeredTo
             }
         );
@@ -98,7 +98,7 @@ function registerForNotification(jsonRequest, callbackFunction)
 function connectNotificationBDatabase() // Custom function to set up db connection
 {
     var mongoose = require('mongoose');
-    mongoose.connect('mongodb://197.88.21.137:27017/db'); // connect to database
+    mongoose.connect('mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib'); // connect to database
 
     db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
@@ -110,9 +110,9 @@ function connectNotificationBDatabase() // Custom function to set up db connecti
 
     var subscriptionSchema = mongoose.Schema (
         {
-            User_id: String,
+            user_id: String,
             registeredTo: [String],
-            Thread_id: String
+            thread_id: String
         });
 
 
