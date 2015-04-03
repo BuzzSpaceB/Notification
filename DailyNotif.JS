@@ -50,7 +50,7 @@ function CheckDB()
 				options[emailCount] = 
 				{
 					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-					to : docs1[0].PreferredEmail,               //Change this to the email addess you want to receive the email. This will eventually be the user's email.
+					to : docs1[0].User_id+"@tuks.co.za",               //Change this to the LDAP Email if possible
 					subject: "New Daily Notification",
 					plain: docs[emailCount].TimeAndDate + " " + docs[emailCount].Type + " "  + docs[emailCount].Context,
 					html: docs[emailCount].TimeAndDate + " <b>" + docs[emailCount].Type + "</b> "  + docs[emailCount].Context
