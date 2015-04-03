@@ -4,7 +4,8 @@ var express = require('express'),
     app = express();
 var schedule = require('node-schedule');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://197.88.69.254:27017/db'); // connect to database
+//mongoose.connect('mongodb://197.88.21.137:27017/ServerCopy');
+mongoose.connect("mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib");
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -13,21 +14,23 @@ db.once('open', function (callback)
 	;
 });
 
-var notificationSchema = mongoose.Schema (
-{
-	Notification_id: String,
-	Thread_id: String,
-	User_id: String,
-	TimeAndDate: Date,
-	Type: String,
-	Context: String,
-	Read: Boolean
+var NotificationSchema = mongoose.Schema({
+    notification_id             : String,            /* PK */
+    thread_id                   : String,           /* Notifications relate to a specific thread */
+    user_id                     : String,           /* A notification will be sent to a specific user */
+    date_time                   : Date,             /* A notification will show its date and time */
+    type                        : String,           /* Each notification has a type, like Delete, New Post etc. */
+    content                     : String,           /* The actual notification text */
+    read                        : Boolean           /* Flag to show notification has been read */
 });
 
-var UsersSchema = mongoose.Schema(
-{
-	User_id: String,
-	PreferredEmail: String
+
+var UserSchema = mongoose.Schema({
+	user_id             : String,           /* PK, this is the user_id as in LDAP i.e student number */
+    username            : String,           /* The user's preferred username, like first name */
+    roles               : [{role_name : [String], module: [String]}],      /* Array of Roles & modules of the user as from LDAP */
+    modules      		: [String],          /* Array of Modules that is active for the user */
+	post_count			: Number
 });
 
 var UserSubscriptionSettingsSchema = mongoose.Schema (
@@ -39,8 +42,8 @@ var UserSubscriptionSettingsSchema = mongoose.Schema (
 	DailyEmail: Boolean
 });
 
-var userModel = mongoose.model("Users", UsersSchema);
-var Notification = mongoose.model('Notification', notificationSchema);
+var userModel = mongoose.model("Users", UserSchema);
+var Notification = mongoose.model('Notification', NotificationSchema);
 var UserSubscriptionSettingsModel = mongoose.model("SubscriptionSetting", UserSubscriptionSettingsSchema);
 //CheckDB(); //USED for testing purposes (Send the email now rather than wait for midnight)
 //*******************************************************************************************TO HERE
@@ -49,21 +52,21 @@ var emailCount = 0;
 function CheckDB()
 {
 	
-	var notifs = Notification.find({Read: false},function(err,docs)
+	var notifs = Notification.find({read: false},function(err,docs)
 	{
 		
 		for(var i=0;i<docs.length;i++)
 		{
 
-			var subs = UserSubscriptionSettingsModel.find({User_id:docs[i].User_id, DailyEmail:true},function(err,docs1)
+			var subs = UserSubscriptionSettingsModel.find({User_id:docs[i].user_id, DailyEmail:true},function(err,docs1)
 			{
 				options[emailCount] = 
 				{
 					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-					to : docs[emailCount].User_id+"@tuks.co.za",               //Change this to the LDAP Email if possible
+					to : docs[emailCount].user_id+"@tuks.co.za",               //Change this to the LDAP Email if possible
 					subject: "New Daily Notification",
-					plain: docs[emailCount].TimeAndDate + " " + docs[emailCount].Type + " "  + docs[emailCount].Context,
-					html: docs[emailCount].TimeAndDate + " <b>" + docs[emailCount].Type + "</b> "  + docs[emailCount].Context
+					plain: docs[emailCount].date_time + " " + docs[emailCount].type + " "  + docs[emailCount].content,
+					html: docs[emailCount].date_time + " <b>" + docs[emailCount].type + "</b> "  + docs[emailCount].content
 				};
 				addEmail(JSON.stringify(options[emailCount]));
 				emailCount++;
