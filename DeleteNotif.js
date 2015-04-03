@@ -83,47 +83,36 @@ module.exports = function deleteNotification(obj) {
 
 //helper functions
 function getUserList(thread) {
-	console.log('Getting user list for ' + thread);
+	if (thread) {
+		console.log('Getting user list for ' + thread);
 
-	var getSubList = subscriptionModel.find(
-	{
-		'Thread_id':{ $in:[
-			thread
-		]}
-	}, function(err, docs)
-	{
-		// console.log(docs);
+		subscriptionModel.find({Thread_id: thread}, function(err, docs)
+		{
+			if (err) {
+				console.log(err);
+				throw err;
+			}
+			else 
+			{
+				for (var i in docs) {
+					var doc = docs[i];
 
-		for (var i in docs) {
-			var doc = docs[i];
-			// console.log(doc);
+					if (userList.indexOf(doc.User_id) < 0) {
+						userList.push(doc.User_id);
+					}
+				}
 
-			userList.push(doc.User_id);
-		}
+				if (thread !== 'root') {
+					threadsModel.find({Thread_id: thread}, function(err, docs)
+					{
+						parentThread = docs[0].Parent_id;
 
-		console.log(userList);
+						getUserList(parentThread);
+					});
+				}
 
-		if (thread !== 'root') {
-			// getParentThread(thread);
-			// getUserList(parentThread);
-		}
-	});
-}
-
-function getParentThread(thread) {
-	console.log('Getting parent for ' + thread);
-
-	var getParentThreadID = threadsModel.find(
-	{
-		'Thread_id':{ $in:[
-			thread
-		]}
-	}, function(err, docs)
-	{
-		// console.log(docs);
-
-		parentThread = docs[0].Parent_id;
-
-		console.log(parentThread);
-	});
+				console.log(userList);
+			}
+		});
+	}
 }
