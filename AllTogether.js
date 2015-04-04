@@ -102,3 +102,18 @@ var StandardNotifReq ={
 	thread: 'b1'
 };
 StandardNotif(StandardNotifReq);
+/*********************************************************Appraisal Notificaiton ****************************************
+
+var AppraisalNotif = require('./AppraisalNotifyMe.js');
+/*
+	@param obj is the user id of the post creator and the user id of the appraisal creator as well as the appraised thread id
+	@author Liz Joseph
+*/
+var obj = {
+    current_user_id: 'u11008602',
+	post_user_id: 'u10075268',
+	appraisedThread_id: 'c2',
+	appraisalType: 'like'  //this is attained by "var myAppraisalType = req.body.appraisal;" when button is clicked
+};
+
+addAppraisalToDB(obj);
