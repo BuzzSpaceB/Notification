@@ -47,30 +47,36 @@ var Threads = mongoose.model("Threads",ThreadSchema);
 var Subscription = mongoose.model("Subscription", subscriptionSchema);
 var Notification = mongoose.model("Notification", NotificationSchema);
 
+
 /*Global variables*/
-var callingThread = "a2";
+var callingThread;
 var callingUser;
 var parent;
 var list = [];
 
-Threads.find({ thread_id: callingThread}, function(err, docs) 
-{
-	if (err) 
+/*Function to be called*/ //Expects a thread id.
+module.exports = function StandardNotification(obj) {
+	sender = JSON.parse(obj);
+	Threads.find({ thread_id: sender.thread}, function(err, docs) 
 	{
-		throw err;			
-	}
-	else
-	{	if(docs.length == 0)
+		if (err) 
 		{
-			console.log("Thread doesn't exist..")
+			throw err;			
 		}
 		else
-		{	 
-			callingUser = docs[0].user_id;
-			GetSubscribers(callingThread);
+		{	if(docs.length == 0)
+			{
+				console.log("Thread doesn't exist..")
+			}
+			else
+			{	
+				callingThread = docs[0].thread_id;
+				callingUser = docs[0].user_id;
+				GetSubscribers(docs[0].thread_id);
+			}
 		}
-	}
-});
+	});
+}
 
 function GetSubscribers(thread)
 {
@@ -136,19 +142,6 @@ function GetSubscribers(thread)
 	});
 }
 
-function notify()
-{
-	
-	if( list.length != 0)
-	{
-		for (var i in list) 
-		{
-			newNotification(list[i]);
-			
-		}
-	}
-}
-
 function newNotification(user)
 {
 	var notification = new Notification(
@@ -175,6 +168,29 @@ function newNotification(user)
 	});
 	//console.log(notification);
 }
+
+function notify()
+{
+	
+	if( list.length != 0)
+	{
+		for (var i in list) 
+		{
+			newNotification(list[i]);
+			var options = {
+					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
+					to : list[i] + "@tuks.co.za",
+					Subject: "New Comment Notification",
+					plain: "New Buzz Space Comment Notification" + callingUser + " has commented  on a post. " + "You are subscribed to " + callingUser,
+					html: "New Buzz Space Comment Notification <br>" + callingUser + " has commented  on a post. " + "You are subscribed to " + callingUser
+				}
+				var message = JSON.stringify(options);
+				console.log(message);
+			//	send(message);
+		}
+	}
+}
+
 /*Listen to port*/
 app.listen(5000,'127.0.0.1',function(){
     console.log('Server is running..');
