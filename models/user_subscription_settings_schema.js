@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var UserSubscriptionSettingsSchema = mongoose.Schema (
 {
-	User_id: String,
+	user_id: String,
 	Deletion: Boolean,
 	Appraisal: Boolean,
 	InstantEmail: Boolean,
