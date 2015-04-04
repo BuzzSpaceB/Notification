@@ -14,38 +14,11 @@ db.once('open', function (callback)
 	;
 });
 
-/*Get relevant schemas*/
-var ThreadSchema = new mongoose.Schema({
-    thread_id       : String, 					/*PK*/
-    parent_thread_id: String,				    /*FK, Parent of the thread*/
-    user_id         : String,				    /*FK, Each Thread has one author*/
-    num_children    : Number,                   /* The number of children the Thread has */
-    closed          : Boolean,                  /* Flag to show thread is closed */
-    hidden          : Boolean,                  /* Flag to show thread is hidden */
-    level           : Number,                    /* Shows on which level the thread is currently at */
-    post_id         : String                    /* The post that is connected to the thread */
-});
-
-var subscriptionSchema = mongoose.Schema({
-    user_id: String,
-	registeredTo: [String],
-	Thread_id: String
-});
-
-var NotificationSchema = mongoose.Schema({
-    notification_id             : String,            /* PK */
-    thread_id                   : String,           /* Notifications relate to a specific thread */
-    user_id                     : String,           /* A notification will be sent to a specific user */
-    date_time                   : Date,             /* A notification will show its date and time */
-    type                        : String,           /* Each notification has a type, like Delete, New Post etc. */
-    content                     : String,           /* The actual notification text */
-    read                        : Boolean           /* Flag to show notification has been read */
-});
 
 /*Database access*/
-var Threads = mongoose.model("Threads",ThreadSchema);
-var Subscription = mongoose.model("Subscription", subscriptionSchema);
-var Notification = mongoose.model("Notification", NotificationSchema);
+var Threads = require('./models/thread');
+var Subscription = require('./models/subscription');
+var Notification = require('./models/notification');
 
 /*Global variables*/
 var callingThread;
@@ -54,6 +27,11 @@ var parent;
 var list = [];
 
 /*Function to be called, expects a thread id*/
+/*
+	var test= {
+		thread = 'b1';
+	}
+*/
 module.exports = function StandardNotification(obj) {
 	sender = JSON.parse(obj);
 	Threads.find({ thread_id: sender.thread}, function(err, docs) 
@@ -156,8 +134,7 @@ function notify()
 				}
 			var message = JSON.stringify(options);
 			console.log(str);
-			//send(message);
-			
+			send(message);
 		}
 	}
 }
@@ -188,7 +165,3 @@ function newNotification(user)
 	});
 	//console.log(notification);
 }
-/*Listen to port*/
-app.listen(5000,'127.0.0.1',function(){
-    console.log('Server is running..');
-});

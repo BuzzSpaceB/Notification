@@ -95,10 +95,10 @@ registerUserNotificationSettings(registerRequest);
 /***********************************************************Standard Notification***************************************************/
 var StandardNotif = require('./StandardNotification');
 /*
-	@param StandardNotifReq	thread_id the id of the new Thread added to the listStyleType
+	@param StandardNotifReq	thread the id of the new Thread added to the BUZZ Space
 	@author Xoliswa Ntshingila
 */
 var StandardNotifReq ={
-	thread_id;
-}
+	thread: 'b1'
+};
 StandardNotif(StandardNotifReq);
