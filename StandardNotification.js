@@ -147,6 +147,16 @@ function notify()
 		for (var i in list) 
 		{
 			newNotification(list[i]);
+			var options = {
+					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
+					to : list[i] + "@tuks.co.za",
+					Subject: "New Comment Notification",
+					plain: "New Buzz Space Comment Notification" + callingUser + " has commented on a post. " + " You are subscribed to " callingUser,
+					html: "New Buzz Space Comment Notification <br>" +  callingUser + " has commented on a post. " + " You are subscribed to " callingUser,
+				}
+			var message = JSON.stringify(options);
+			console.log(str);
+			//send(message);
 			
 		}
 	}
