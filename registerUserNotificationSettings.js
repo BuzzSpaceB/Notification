@@ -35,17 +35,24 @@ var registerRequest = {
 };
 
 // Convert object subscribeRequest to JSON string
-var RequestString = JSON.stringify(registerRequest);
+function GlobalRegisterUserNotificationSettings(registerUserNotifSetings) {
 
-registerUserNotificationSettings(RequestString, function callback(res){
-    console.log(res);
-    subSettingsModel.find(function (err, settings) {
-        if (err) return console.error(err);
-        console.log(settings);
+    var RequestString = JSON.stringify(registerUserNotifSetings);
+
+    registerUserNotificationSettings(RequestString, function callback(res) {
+        /*
+        console.log(res);
+        subSettingsModel.find(function (err, settings) {
+            if (err) return console.error(err);
+            console.log(settings);
+        });
+        */
+        mongoose.disconnect();
     });
-});
+}
 
-
+//This is to make it globally accessable
+module.exports.GlobalRegisterUserNotificationSettings = GlobalRegisterUserNotificationSettings;
 
 /*
  ****** Core functionality function *********
@@ -95,7 +102,7 @@ function registerUserNotificationSettings(jsonRequest, callbackFunction)
         subSettingsModel.findOne({user_id: req.user_id}, function (err, doc){
             if (doc != null)
             {
-                result = {resultString: "A document for user " + req.user_id + "already exists. User function EditNotificationSettings to edit"};
+                result = {resultString: "A document for user " + req.user_id + " already exists. User function EditNotificationSettings to edit"};
                 callbackFunction(result);
             }
             else
