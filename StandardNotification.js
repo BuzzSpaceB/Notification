@@ -48,30 +48,33 @@ var Subscription = mongoose.model("Subscription", subscriptionSchema);
 var Notification = mongoose.model("Notification", NotificationSchema);
 
 /*Global variables*/
-var callingThread = "a2";
+var callingThread;
 var callingUser;
 var parent;
 var list = [];
 
-Threads.find({ thread_id: callingThread}, function(err, docs) 
-{
-	if (err) 
+/*Function to be called, expects a thread id*/
+module.exports = function StandardNotification(obj) {
+	sender = JSON.parse(obj);
+	Threads.find({ thread_id: sender.thread}, function(err, docs) 
 	{
-		throw err;			
-	}
-	else
-	{	if(docs.length == 0)
+		if (err) 
 		{
-			console.log("Thread doesn't exist..")
+			throw err;			
 		}
 		else
-		{	 
-			callingUser = docs[0].user_id;
-			GetSubscribers(callingThread);
+		{	if(docs.length == 0)
+			{
+				console.log("Thread doesn't exist..")
+			}
+			else
+			{	
+				callingThread = docs[0].thread_id;
+				callingUser = docs[0].user_id;
+				GetSubscribers(docs[0].thread_id);
+			}
 		}
-	}
-});
-
+	});
 function GetSubscribers(thread)
 {
 	Threads.find({ thread_id: thread}, function(err, docs) 
