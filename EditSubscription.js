@@ -5,11 +5,17 @@
  * Modified: 03/04/2015
  */
 
-var db;
-var subscriptionModel;
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib'); // connect to database
 
-//setup db connection and get a handle to subscriptionModel
-connectNotificationBDatabase();
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback)
+{
+
+});
+var subscriptionModel = require('./models/subscription.js');;
+
 
 // dummy request variable
 var deleteSubscriptionRequest = {
@@ -244,29 +250,4 @@ function EditSubscription(obj, doneFunction) // doneFunction is called when asyn
     }   // end Handle Edit Request
     //console.log(result);
 
-}
-
-
-function connectNotificationBDatabase() // Custom function to set up db connection
-{
-    var mongoose = require('mongoose');
-    mongoose.connect('mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib'); // connect to database
-
-    db = mongoose.connection;
-    db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', function (callback)
-    {
-
-    });
-
-
-    var subscriptionSchema = mongoose.Schema (
-        {
-            user_id: String,
-            registeredTo: [String],
-            thread_id: String
-        });
-
-
-    subscriptionModel = mongoose.model("Subscription", subscriptionSchema);
 }

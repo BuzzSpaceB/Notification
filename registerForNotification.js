@@ -11,13 +11,17 @@
  * Inserts a new subscriptionModel document
  */
 
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib'); // connect to database
 
-var subscriptionModel;
+db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback)
+{
 
-
-connectNotificationBDatabase();
-
-
+});
+var subscriptionModel = require('./models/subscription.js');
+//Dummy Request
 var subscribeRequest = {
     user_id: 'registerTestUser',
     thread_id: 'c2',
@@ -44,7 +48,7 @@ registerForNotification(RequestString, function callback(res){
  * * callbackFunction called when async calls within this function have completed. Used instead of return statement which only works synchronously
  * * returns a result JSON describing the result of the action performed by the function
  */
-function registerForNotification(jsonRequest, callbackFunction)
+module.exports = function registerForNotification(jsonRequest, callbackFunction)
 {
     var req = JSON.parse(jsonRequest);
     var result; // JSON string containing the result of operation performed by EditSubscription or any errors.
@@ -95,28 +99,5 @@ function registerForNotification(jsonRequest, callbackFunction)
 }
 
 
-function connectNotificationBDatabase() // Custom function to set up db connection
-{
-    var mongoose = require('mongoose');
-    mongoose.connect('mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib'); // connect to database
 
-    db = mongoose.connection;
-    db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', function (callback)
-    {
-
-    });
-
-
-    var subscriptionSchema = mongoose.Schema (
-        {
-            user_id: String,
-            registeredTo: [String],
-            thread_id: String
-        });
-
-
-    subscriptionModel = mongoose.model("Subscription", subscriptionSchema);
-
-
-}
+    

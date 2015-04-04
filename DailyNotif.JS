@@ -13,38 +13,8 @@ db.once('open', function (callback)
 {
 	;
 });
-
-var NotificationSchema = mongoose.Schema({
-    notification_id             : String,            /* PK */
-    thread_id                   : String,           /* Notifications relate to a specific thread */
-    user_id                     : String,           /* A notification will be sent to a specific user */
-    date_time                   : Date,             /* A notification will show its date and time */
-    type                        : String,           /* Each notification has a type, like Delete, New Post etc. */
-    content                     : String,           /* The actual notification text */
-    read                        : Boolean           /* Flag to show notification has been read */
-});
-
-
-var UserSchema = mongoose.Schema({
-	user_id             : String,           /* PK, this is the user_id as in LDAP i.e student number */
-    username            : String,           /* The user's preferred username, like first name */
-    roles               : [{role_name : [String], module: [String]}],      /* Array of Roles & modules of the user as from LDAP */
-    modules      		: [String],          /* Array of Modules that is active for the user */
-	post_count			: Number
-});
-
-var UserSubscriptionSettingsSchema = mongoose.Schema (
-{
-	User_id: String,
-	Deletion: Boolean,
-	Appraisal: Boolean,
-	InstantEmail: Boolean,
-	DailyEmail: Boolean
-});
-
-var userModel = mongoose.model("Users", UserSchema);
-var Notification = mongoose.model('Notification', NotificationSchema);
-var UserSubscriptionSettingsModel = mongoose.model("SubscriptionSetting", UserSubscriptionSettingsSchema);
+var Notification = require('./models/notification.js');;
+var UserSubscriptionSettingsModel = require('./models/user_subscription_settings_schema.js');;
 //CheckDB(); //USED for testing purposes (Send the email now rather than wait for midnight)
 //*******************************************************************************************TO HERE
 var options = new Array();
