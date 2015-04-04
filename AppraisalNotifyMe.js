@@ -154,7 +154,7 @@ function sendEmail(destinedEmail, obj)
 				var options = {
 					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
 					to : destinedEmail,                        
-					Subject: "New Buzz Appraisal Notification",
+					subject: "New Buzz Appraisal Notification",
 					plain: "New Buzz Appraisal Notification",
 					html: user +" has given your post this appraisal:  " + type
 				}
