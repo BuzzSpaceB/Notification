@@ -10,6 +10,7 @@
  */
 
 var send = require('./Email.js');
+/*
 var express = require('express'),
     app = express();
 var schedule = require('node-schedule');
@@ -17,6 +18,7 @@ var unitTesting = require('nodeunit'); //for unit testing
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended : true}));
 var http = require('http'), fs = require('fs');
+*/
 var userWhoAppraised, typeOfAppraise, destinedEmail;
 var postCreator,currentSessionUser,appraisedThread_id,myAppraisalType;
 var request, response;
@@ -29,7 +31,7 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) 
 {
-	;
+
 });
 
 var Users = require('./models/user.js');
@@ -41,40 +43,44 @@ var Subscription = require('./models/user_subscription_settings_schema.js');
 
 function addAppraisalToDB(details)
 {
-	var getUserSub = Subscription.find(
+	Subscription.findOne(
 	{
 		'user_id':details.post_user_id
+
 	},function(err,docs)
 	{
-		var instant = docs[0].InstantEmail;
-		if(instant == 'true')
+		var instant = docs.InstantEmail;
+		if(instant == true)
 		{
-			
+            console.log("instant");
+            checkSubscription(details);
 			addNewNotification(true,details);
-			checkSubscription(details);
-			
 		}else
 		{
-			console.log("You are subscribed for daily notifications");
-				addNewNotification(false, details);
+			console.log("daily notifications");
+			addNewNotification(false, details);
 		}
       
 	});
 }
 
-//xxxxxxxxxxxxxxxxxxxxxx
-function addNewNotification(readVariable,obj)
-{
-	details = obj;
+//This is so that the method is globally accessable.
+module.exports.addAppraisal = addAppraisalToDB;
 
-	var newNotif = new Notification(
-				{Notification_id: "appraiseNotif",
-				Thread_id: details.thread_id,
-				User_id: details.post_user_id,
-				TimeAndDate: new Date(),
-				Type: "Appraisal",
-				Context: details.appraisalType,
-				Read: readVariable});
+//xxxxxxxxxxxxxxxxxxxxxx
+function addNewNotification(readVariable,details)
+{
+	//details = obj;
+
+	newNotif = new Notification(
+				{notification_id: "appraiseNotif",
+				thread_id: details.appraisedThread_id,
+				user_id: details.post_user_id,
+				date_time: new Date(),
+				type: "Appraisal",
+                content: details.current_user_id+" has given your post this appraisal: " + details.appraisalType,
+				read: false});
+
 				newNotif.save(function(err,newNotif)
 				{
 					if (err) 
@@ -84,10 +90,9 @@ function addNewNotification(readVariable,obj)
 					}
 					else 
 					{
-					
 						success = true;
-						
 					}
+                    //mongoose.disconnect();
 				});
 }
 
@@ -163,6 +168,7 @@ function sendEmail(destinedEmail, obj)
 				
 }
 
+/*
 
 //Code needed to send the email. Im aware its duplicated but its just for testing purposes, otherwise it will be modularized.
 //Gets the specific action and opens the html page
@@ -193,3 +199,4 @@ app.listen(5000,'127.0.0.1',function(){
     console.log('Server is running.');
 });
 
+*/
