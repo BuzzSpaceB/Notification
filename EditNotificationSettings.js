@@ -45,19 +45,25 @@ var editDailyEmailRequest = {
 };
 
 
-
 // callback used to retrieve result of EditNotificationSettings function
 // example of how to call EditSubscription
-EditNotificationSettings(JSON.stringify(editDailyEmailRequest), function callback(res){
-    // do whatever with res which is the result of EditSubscription
-    console.log(res);
-    subSettingsModel.find(function (err, settings) {
-        if (err) return console.error(err);
-        console.log(settings);
+function GlobalEditNotificationSettings(editNotifSettings) {
+    EditNotificationSettings(JSON.stringify(editNotifSettings), function callback(res) {
+        // do whatever with res which is the result of EditSubscription
+        /*
+         console.log(res);
+
+         subSettingsModel.find(function (err, settings) {
+         if (err) return console.error(err);
+         console.log(settings);
+         });
+         */
+        mongoose.disconnect();
     });
-});
+}
 
-
+//This is so that the method is globally accessable.
+module.exports.GlobalEditNotificationSettings = GlobalEditNotificationSettings;
 
 function EditNotificationSettings(obj, doneFunction) // doneFunction is called when asynchronous calls withing EditNotificationSettings have completed. Used instead of return statement
 {
