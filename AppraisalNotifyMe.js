@@ -1,3 +1,14 @@
+/**
+ * Appraisal core functionality
+ * Author: Liz Joseph
+ * Group: NotificationB
+ */
+
+/********************************************************
+ * Function intended to add the AppraisalNotifyMe for a particular user to the database (i.e. create a new notification for appraisal)
+ * Checks whether a user is subscribed to receive an appraisal and adds the new notification to the database and sends the email.
+ */
+
 var send = require('./Email.js');
 var express = require('express'),
     app = express();
@@ -9,142 +20,63 @@ var http = require('http'), fs = require('fs');
 var userWhoAppraised, typeOfAppraise, destinedEmail;
 var postCreator,currentSessionUser,appraisedThread_id,myAppraisalType;
 var request, response;
+var details;
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://197.88.21.137:27017/db'); // connect to database
+mongoose.connect("mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib"); // connect to database
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) 
 {
-	
+	;
 });
 
-
-	
-//xxxxxxxxxxxxxxxxxxxxxxxMongoose Schemas needed xxxxxxxxxxxxxxxxxxxxxxxxxx//
-var UsersSchema = mongoose.Schema(
-{
-	User_id: String,
-	PreferredEmail: String
-});
-
-var ThreadsSchema = mongoose.Schema(
-{
-	Thread_id: String,
-	Parent_id: String,
-	User_id: String
-});
-
-var notificationSchema = mongoose.Schema (
-{
-	Notification_id: String,
-	Thread_id: String,
-	User_id: String, //user who owns the post
-	TimeAndDate: Date,
-	Type: String,
-	Context: String, // Add User who made the appraisail to the context (i.e. Matt has liked your post)
-	Read: Boolean
-});
-
-var UserSubscriptionSettingsSchema = mongoose.Schema (
-{
-	User_id: String,
-	Deletion: Boolean,
-	Appraisal: Boolean,
-	InstantEmail: Boolean,
-	DailyEmail: Boolean
-});
-
-var subscriptionSchema = mongoose.Schema (
-{
-	User_id: String,
-	registeredTo: [String],
-	Thread_id: String
-});
-//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-//xxxxxxxxxxxxxxxxxx Variables needed to access the dataxxxxxxxxxxxxxxx//
-var Users = mongoose.model("Users", UsersSchema);
-var Threads = mongoose.model("Threads", ThreadsSchema);
-var Notification = mongoose.model("Notification", notificationSchema);
-var Subscription = mongoose.model("SubscriptionSetting", UserSubscriptionSettingsSchema);
-//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-//Sample creation of the data needed for function to work
-var obj = {
-    current_user_id: 'Matt',
-	post_user_id: 'Liz',
-	appraisedThread_id: 'c2'
-}
-
-//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-//xxxxxxxxxxxxxxxxxx Global Variabls xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx//
-//Pass through object that has both the id of the person that appraised the post
-//the user_id of the person that that created the thread
-
- var a = JSON.stringify(obj.current_user_id);
- var b = JSON.stringify(obj.post_user_id);
- var c = JSON.stringify(obj.post_user_id);
- 
- //currently the objects are hard coded
- currentSessionUser = 'Matt';
- postCreator = 'Liz';
- appraisedThread_id = 'c2';
- 
+var Users = require('./models/user.js');
+var Threads = require('./models/thread.js');
+var Notification = require('./models/notification.js');
+var Subscription = require('./models/user_subscription_settings_schema.js');
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx//
 
-
-function addAppraisalToDB()
+function addAppraisalToDB(details)
 {
-
-
 	var getUserSub = Subscription.find(
 	{
-		'User_id':postCreator
-	
-		
+		'user_id':details.post_user_id
 	},function(err,docs)
 	{
 		var instant = docs[0].InstantEmail;
-		instant='true';
 		if(instant == 'true')
 		{
-			addNewNotification(true);//sends true because email is sent immediately
-			checkSubscription();
 			
-			
+			addNewNotification(true,details);
+			checkSubscription(details);
 			
 		}else
 		{
-			console.log("The email will be sent later");
-			//add to database
-				addNewNotification(false); //sends through false email is sent at specific time
+			console.log("You are subscribed for daily notifications");
+				addNewNotification(false, details);
 		}
       
 	});
 }
 
 //xxxxxxxxxxxxxxxxxxxxxx
-function addNewNotification(readVariable)
+function addNewNotification(readVariable,obj)
 {
-
+	details = obj;
 
 	var newNotif = new Notification(
-				{
-					Notification_id: "new1",
-					Thread_id: appraisedThread_id,
-					User_id: postCreator,
-					TimeAndDate: new Date(),
-					Type: "Appraisal",
-					Context: myAppraisalType,
-					Read: readVariable
-				});
+				{Notification_id: "appraiseNotif",
+				Thread_id: details.thread_id,
+				User_id: details.post_user_id,
+				TimeAndDate: new Date(),
+				Type: "Appraisal",
+				Context: details.appraisalType,
+				Read: readVariable});
 				newNotif.save(function(err,newNotif)
 				{
-					
 					if (err) 
 					{
 						success = false;
@@ -157,27 +89,26 @@ function addNewNotification(readVariable)
 						
 					}
 				});
-
 }
 
 //This Function checks in the database to see if the user that created the post is subscribed to Appraisal Notifications
-function checkSubscription()
+function checkSubscription(obj)
 {
-	
+
 	var getUserSub = Subscription.find(
 	{
-		'User_id':postCreator
-		
-			
+		user_id:obj.post_user_id
 		
 	},function(err,docs)
 	{
+		
 		var notificationOn = docs[0].Appraisal;
+		
 		var value = JSON.stringify(notificationOn);
 		if(value == 'true')
 		{
 		
-			getEmailToSendTo();
+			getEmailToSendTo(obj);
 					
 		}else
 		{
@@ -189,47 +120,45 @@ function checkSubscription()
 
 //This Function checks in the database for the email address of the post creator to send them an email
 
-function getEmailToSendTo()
+function getEmailToSendTo(user)
 {  
 	var getEmail = Users.find(
 	{
-		 'User_id':{ $in:[
-			postCreator
-		]
-			
-		}
-			
-		
+		 'user_id':{ $in:[
+			user.post_user_id
+		]}		
 	},function(err,docs)
 	{
 		
-		 destinedEmail = JSON.stringify(docs[0].PreferredEmail);
-		sendEmail();  //this will call Matts Function email. So it can be taken out as a function
+		destinedEmail = user.post_user_id + "@tuks.co.za";
+		sendEmail(destinedEmail, user);  
 		
 	});
-
-
 }
 
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-function sendEmail()
+function sendEmail(destinedEmail, obj)
 {
-			
+				details =obj;
+				var user = JSON.stringify(details.post_user_id);
+				var type = JSON.stringify(details.appraisalType);
+	
+	
 				var options = {
 					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-					to : destinedEmail,                        //Change this to the email addess you want to receive the email. This will eventually be the user's email.
+					to : destinedEmail,                        
 					Subject: "New Buzz Appraisal Notification",
 					plain: "New Buzz Appraisal Notification",
-					html: currentSessionUser +" has given your post this appraisal:  " + myAppraisalType
+					html: user +" has given your post this appraisal:  " + type
 				}
 				
 				if(destinedEmail!='undefined')
 				{
 					var str = JSON.stringify(options); 
-					response.sendfile('test.html');
 					send(str);
+					
 				}
 				
 }
@@ -240,12 +169,16 @@ function sendEmail()
 
 app.post('/appraisal', function (req, res) {
 
-addAppraisalToDB();
-request = req;
-response = res;
-myAppraisalType = request.body.appraisal;
+	myAppraisalType = req.body.appraisal; //this needs to be sent as an object
 	
-res.sendfile('test.html');
+	var obj = {
+    current_user_id: 'u11008602', //currentSessionUser
+	post_user_id: 'u10075268', //postCreator
+	appraisedThread_id: 'c2', //appraisedThread_id
+	appraisalType: myAppraisalType};
+
+	addAppraisalToDB(obj);
+	res.sendfile('test.html');
 });
 
 app.get('/', function (req, res) {
