@@ -6,7 +6,7 @@ var schedule = require('node-schedule');
 
 /* Database connection */
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://197.88.21.137:27017/db'); 
+mongoose.connect("mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib");
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) 
@@ -15,152 +15,167 @@ db.once('open', function (callback)
 });
 
 /*Get relevant schemas*/
-var ThreadsSchema = mongoose.Schema
-({
-	Thread_id: String,
-	Parent_id: String,
-	User_id: String
+var ThreadSchema = new mongoose.Schema({
+    thread_id       : String, 					/*PK*/
+    parent_thread_id: String,				    /*FK, Parent of the thread*/
+    user_id         : String,				    /*FK, Each Thread has one author*/
+    num_children    : Number,                   /* The number of children the Thread has */
+    closed          : Boolean,                  /* Flag to show thread is closed */
+    hidden          : Boolean,                  /* Flag to show thread is hidden */
+    level           : Number,                    /* Shows on which level the thread is currently at */
+    post_id         : String                    /* The post that is connected to the thread */
 });
 
-var subscriptionSchema = mongoose.Schema (
-{
-	User_id: String,
+var subscriptionSchema = mongoose.Schema({
+    user_id: String,
 	registeredTo: [String],
-	Thread_id: String,
-	Deletion: Boolean,
-	Appraisal: Boolean,
-	InstantEmail: Boolean,
-	DailyEmail: Boolean
+	Thread_id: String
 });
 
-var notificationSchema = mongoose.Schema (
-{
-	Notification_id: String,
-	Thread_id: String,
-	User_id: String,
-	TimeAndDate: Date,
-	Type: String,
-	Context: String,
-	Read: Boolean
+var NotificationSchema = mongoose.Schema({
+    notification_id             : String,            /* PK */
+    thread_id                   : String,           /* Notifications relate to a specific thread */
+    user_id                     : String,           /* A notification will be sent to a specific user */
+    date_time                   : Date,             /* A notification will show its date and time */
+    type                        : String,           /* Each notification has a type, like Delete, New Post etc. */
+    content                     : String,           /* The actual notification text */
+    read                        : Boolean           /* Flag to show notification has been read */
 });
 
 /*Database access*/
-var Threads = mongoose.model("Threads",ThreadsSchema);
+var Threads = mongoose.model("Threads",ThreadSchema);
 var Subscription = mongoose.model("Subscription", subscriptionSchema);
-var Notification = mongoose.model("Notification", notificationSchema);
+var Notification = mongoose.model("Notification", NotificationSchema);
 
-/*NEW THREAD - Add a new thread and use it as the calling thread , for testing must be in Unit test.. I think*/
-	newThread = new Threads
-	({
-		Thread_id: "c3",
-		Parent_id: "c2",
-		user_id: "Xoliswa"
-	});
-	newThread.save(function(err,newThread)
+/*Global variables*/
+var callingThread = "a2";
+var callingUser;
+var parent;
+var list = [];
+
+Threads.find({ thread_id: callingThread}, function(err, docs) 
+{
+	if (err) 
+	{
+		throw err;			
+	}
+	else
+	{	if(docs.length == 0)
+		{
+			console.log("Thread doesn't exist..")
+		}
+		else
+		{	 
+			callingUser = docs[0].user_id;
+			GetSubscribers(callingThread);
+		}
+	}
+});
+
+function GetSubscribers(thread)
+{
+	Threads.find({ thread_id: thread}, function(err, docs) 
 	{
 		if (err) 
 		{
-			console.log("Error Adding c3 Thread");
-		}
-		else 
-		{
-		}
-	});
-var thread = "root";
-//var notNull = true;
-/*TEST*/
-//var user = Threads.find({ Thread_id: thread }, function(err, user) {
-//  if (err) throw err;	
-//  console.log(user[0].Thread_id);
-//});
-
-var user = Threads.find({ Thread_id: thread }, function(err, user) {
-  if (err) throw err;	
-});
-
-
-/*Global variables*/
-var sessionUser_id = newThread.user_id;
-//var sessionUser_id = thread;
-standardNotification(newThread);
-//standardNotification(user[0]);
-
-function standardNotification(thread)
-{
-	var currentThread = thread;
-	var notify = false;
-	var notNull = true;
-	
-	while(notNull)
-	{
-		console.log("Current thread: "+ currentThread.Thread_id);
-		var parent_id = currentThread.Parent_id;
-		if(parent_id == null) 
-		{
-		//	console.log("Null parent");
-			notNull = false;
+			throw err;			
 		}
 		else
 		{
-			// console.log("Not null parent");
-			 var ParentThread;
-			 var parent = Threads.find({ Thread_id: parent_id }, function(err, parent) 
-			 {
-				if (err) 
+			parent = docs[0].parent_thread_id;
+			
+		}
+		
+	if(parent == null)
+	{
+		notify();
+	}
+	else
+	{
+
+		Subscription.find({ thread_id: parent}, function(err, docs) 
+		{
+			if (err) 
+			{
+				throw err;
+			}
+			else
+			{		 
+				if(docs.length == 0)
 				{
-					throw err;
+				 // console.log("No subscriptions..")
 				}
 				else
 				{
-				  //console.log("Parent: " + parent[0].Thread_id );
-				  ParentThread = parent[0];
-				//  console.log("Parent: " + ParentThread.Thread_id );
+					
+					for (var i in docs)
+					{
+						var doc = docs[i];
+						
+						for(var k =0; k < doc.registeredTo.length; k++)
+						{
+							if(doc.registeredTo[k] == 'All')
+							{
+							
+								if (list.indexOf(doc.user_id) < 0)
+								list.push(doc.user_id)
+							}
+							if(doc.registeredTo[k] == callingUser)
+							{
+							
+								if (list.indexOf(doc.user_id) < 0)
+								list.push(doc.user_id);
+							}
+						}
+					}
 				}
-			 });
-			 //Parent subscription
-			 var arrayLength ;
-			 var subscription = Subscription.find({Thread_id: parent_id }, function(err, subscription) 
-			 {
-				if (err) 
-				{
-					throw err;
-				}
-				else
-				{
-				// console.log("Parent Array Length: " + subscription[0].registeredTo.length );
-				 arrayLength = subscription[0].registeredTo.length;
-				}
-			 });
-			 // Check if you subscribed to "ALL"
-			 if( arrayLength ==1 &&  subscription[0].registeredTo[0] == "All")
-			 {
-			//	console.log("Subscribed to ALL" );
-				notify = true;
-			 }
-			 //Check if you are subscribed to the parent thread
-			 for (var i = 0; i < arrayLength ; i++)
-			 {
-				if( subscription[0].registeredTo[i] == sessionUser_id)
-				{
-					notify = true;
-					break;
-				}
-			 }
-			 //Check if you should add a new notification document
-			 if(notify)
-			 {
-			   // console.log("Calling notify for" + sessionUser_id );
-				//Add a new notification object
-			 }
-			 //Make parent the new currentCounter -- Traverse the tree till you reach the root
-			  currentThread = ParentThread;
-			 //console.log("Current Current" + currentThread.Thread_id);
+			}	
+		});
+		GetSubscribers(parent);
+	}
+	});
+}
+
+function notify()
+{
+	
+	if( list.length != 0)
+	{
+		for (var i in list) 
+		{
+			newNotification(list[i]);
+			
 		}
 	}
 }
 
-
+function newNotification(user)
+{
+	var notification = new Notification(
+	{
+		notification_id: "Comment Notification",
+		thread_id: callingThread,
+		user_id: user,
+		date_time: new Date(),
+		type: "Comment on thread.",
+		content: callingUser + " has commented on post." + "You are subscribed to " + callingUser ,
+		read: false
+	});
+	notification.save(function(err,notification)
+	{
+		if (err) 
+		{
+			success = false;
+			console.log("Error Adding Notification ");
+		}
+		else 
+		{
+			success = true;
+		}
+	});
+	//console.log(notification);
+}
 /*Listen to port*/
 app.listen(5000,'127.0.0.1',function(){
-    console.log('Server is running here.'); //CHANGE WHEN DONE
+    console.log('Server is running..');
 });
