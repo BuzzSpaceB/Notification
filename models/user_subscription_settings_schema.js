@@ -8,5 +8,5 @@ var UserSubscriptionSettingsSchema = mongoose.Schema (
 	InstantEmail: Boolean,
 	DailyEmail: Boolean
 });
-module.exports = mongoose.model("usersubscriptionsettings", UserSubscriptionSettingsSchema);
+module.exports = mongoose.model("subscriptionsettings", UserSubscriptionSettingsSchema);
 
