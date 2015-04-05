@@ -30,7 +30,7 @@ var reachedRoot = false; //Check to see if the root node has been reached
 //actual function
 module.exports = function deleteNotification(obj) {
 	//Reset variables for each call to the function
-	details = JSON.parse(obj);
+	details = obj;
 	userList = [];
 	reachedRoot = false;
 
@@ -74,11 +74,11 @@ function getUserList(thread, reachedRoot) {
 				console.log(str);
 
 				//Add the notification to the notification db for daily mail use
-				// addNewNotification(user);
+				addNewNotification(user);
 			}
 		}
 		else {
-			subscriptionModel.find({Thread_id: thread}, function(err, docs)
+			subscriptionModel.find({thread_id: thread}, function(err, docs)
 			{
 				if (err) {
 					console.log(err);
@@ -92,10 +92,10 @@ function getUserList(thread, reachedRoot) {
 						var doc = docs[i];
 
 						if (userList.indexOf(doc.user_id) < 0) {
-							UserSubscriptionSettingsModel.find({User_id: doc.User_id}, function(err, docs)
+							UserSubscriptionSettingsModel.find({user_id: doc.user_id}, function(err, docs)
 							{
 								if (docs[0].Deletion === true) {
-									userList.push(docs[0].User_id);
+									userList.push(docs[0].user_id);
 								}
 							});
 						}
@@ -122,13 +122,13 @@ function addNewNotification(user)
 {
 	var newNotif = new notificationModel(
 	{
-		Notification_id: "deletionNotification", //Needs to be made auto incremented
-		Thread_id: details.thread,
-		User_id: user,
-		TimeAndDate: new Date(),
-		Type: "Deletion",
-		Context: currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason,
-		Read: false
+		notification_id: "deletionNotification", //Needs to be made auto incremented
+		thread_id: details.thread,
+		user_id: user,
+		date_time: new Date(),
+		type: "Deletion",
+		content: currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason,
+		read: false
 	});
 	newNotif.save(function(err,newNotif)
 	{
