@@ -56,7 +56,7 @@ module.exports.deleteNotification = deleteNotification;
 function getUserList(thread, reachedRoot) {
 	if (thread) {
 		if (reachedRoot === true) {
-			console.log('Reached root with user list:');
+			console.log('Done traversing with final user list:');
 			console.log(userList);
 
 			//Send email to each user in the user list
@@ -96,17 +96,19 @@ function getUserList(thread, reachedRoot) {
 				}
 				else 
 				{
-					console.log(docs);
+					// console.log(docs);
 
 					for (var i in docs) {
 						var doc = docs[i];
 
-						console.log(userList.indexOf('u13126777'));
+						// console.log(userList.indexOf(doc.user_id));
 						if (userList.indexOf(doc.user_id) === -1) {
 							UserSubscriptionSettingsModel.find({user_id: doc.user_id}, function(err, docs)
 							{
 								if (docs[0].Deletion === true) {
-									userList.push(docs[0].user_id);
+									if (userList.indexOf(doc.user_id) === -1) {
+										userList.push(docs[0].user_id);
+									}
 								}
 							});
 						}
