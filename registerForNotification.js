@@ -43,11 +43,15 @@ function GlobalRegisterForNotification(jsonObject) {
     var RequestString = JSON.stringify(jsonObject);
 
     registerForNotification(RequestString, function callback(res) {
+        /*
         console.log(res);
         subscriptionModel.find(function (err, subscriptions) {
             if (err) return console.error(err);
             console.log(subscriptions);
         });
+        */
+
+        mongoose.disconnect();
     });
 }
 
