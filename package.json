@@ -43,7 +43,6 @@
     "electrolyte": "0.0.6",
     "express": "^4.12.3",
     "handlebars": "^3.0.1",
-    "jsreport": "^0.2.10",
     "ldapjs": "^0.7.1",
     "mongoose": "^3.9.7",
     "morgan": "^1.5.2",
