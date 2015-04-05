@@ -28,7 +28,7 @@ function CheckDB()
 		for(var i=0;i<docs.length;i++)
 		{
 
-			var subs = UserSubscriptionSettingsModel.find({User_id:docs[i].user_id, DailyEmail:true},function(err,docs1)
+			var subs = UserSubscriptionSettingsModel.find({user_id:docs[i].user_id, DailyEmail:true},function(err,docs1)
 			{
 				options[emailCount] = 
 				{
@@ -54,6 +54,7 @@ function CheckDB()
 		}
 		
 	});
+	momgoose.disconnect();
 }
 var toSend = new Array();
 var count = 0;
@@ -105,6 +106,7 @@ rule.minute = 00;
 console.log(new Date());
 var j = schedule.scheduleJob(rule, function()
 {
+	mongoose.connect("mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib");
     console.log('I Logged at Midnight' + new Date());
 	CheckDB();
 });
