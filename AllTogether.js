@@ -15,7 +15,8 @@ var DeleteNotification = require('./DeleteNotif.js');
 var obj =
 {
 	sendRequest = 'true',
-	thread = 'b1'
+	thread = 'b1',
+	reason = 'Inappropriate behaviour'
 };
 DeleteNotification(obj);
 
