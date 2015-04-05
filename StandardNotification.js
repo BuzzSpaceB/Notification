@@ -33,7 +33,8 @@ var list = [];
 	}
 */
 module.exports = function StandardNotification(obj) {
-	sender = JSON.parse(obj);
+	//sender = JSON.parse(obj);
+	sender = obj;
 	Threads.find({ thread_id: sender.thread}, function(err, docs) 
 	{
 		if (err) 
@@ -43,7 +44,7 @@ module.exports = function StandardNotification(obj) {
 		else
 		{	if(docs.length == 0)
 			{
-				console.log("Thread doesn't exist..")
+			//	console.log("Thread doesn't exist..")
 			}
 			else
 			{	
@@ -53,6 +54,7 @@ module.exports = function StandardNotification(obj) {
 			}
 		}
 	});
+}
 function GetSubscribers(thread)
 {
 	Threads.find({ thread_id: thread}, function(err, docs) 
@@ -129,11 +131,11 @@ function notify()
 					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
 					to : list[i] + "@tuks.co.za",
 					Subject: "New Comment Notification",
-					plain: "New Buzz Space Comment Notification" + callingUser + " has commented on a post. " + " You are subscribed to " callingUser,
-					html: "New Buzz Space Comment Notification <br>" +  callingUser + " has commented on a post. " + " You are subscribed to " callingUser,
+					plain: "New Buzz Space Comment Notification " + callingUser + " has commented on a post. " + " You are subscribed to " + callingUser,
+					html: "New Buzz Space Comment Notification <br> " +  callingUser + " has commented on a post. " + " You are subscribed to " + callingUser,
 				}
 			var message = JSON.stringify(options);
-			console.log(str);
+		//	console.log(message);
 			send(message);
 		}
 	}
@@ -156,7 +158,7 @@ function newNotification(user)
 		if (err) 
 		{
 			success = false;
-			console.log("Error Adding Notification ");
+		//	console.log("Error Adding Notification ");
 		}
 		else 
 		{
