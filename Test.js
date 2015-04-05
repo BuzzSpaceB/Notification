@@ -1,5 +1,5 @@
 var send = require('./Email.js');
-var deleteNotification = require('./DeleteNotif.js');
+var DeleteNotification = require('./DeleteNotif.js');
 
 var express = require('express'),
     app = express();
@@ -57,7 +57,7 @@ app.post('/delete', function (req, res) {
 
     var str = JSON.stringify(options);
         res.sendfile('test.html');
-    deleteNotification(str);
+    DeleteNotification.deleteNotification(options);
     // console.log(str);
     // send(str);
 });

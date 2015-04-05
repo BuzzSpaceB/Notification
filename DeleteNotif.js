@@ -63,20 +63,28 @@ function getUserList(thread, reachedRoot) {
 			for (var i in userList) {
 				var user = userList[i];
 
-				var options = {
-					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-					to : user + "@tuks.co.za",
-					Subject: "New Deletion Notification",
-					plain: "New Buzz Space Deletion Notification" + currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason,
-					html: "New Buzz Space Deletion Notification <br>" + currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason
-				}
+				UserSubscriptionSettingsModel.find({user_id: user}, function(err, docs)
+				{
+					//Check to see if user is suscribed to instant emails and if so send an email
+					if (docs[0].InstantEmail === true) {
+						console.log(user + " has requested instant email");
 
-				var str = JSON.stringify(options);
-				// send(str);
-				console.log(str);
+						var options = {
+							from: 'Buzz No Reply <DiscussionThree@gmail.com>',
+							to : user + "@tuks.co.za",
+							Subject: "New Deletion Notification",
+							plain: "New Buzz Space Deletion Notification" + currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason,
+							html: "New Buzz Space Deletion Notification <br>" + currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason
+						}
 
-				//Add the notification to the notification db for daily mail use
-				addNewNotification(user);
+						var str = JSON.stringify(options);
+						// send(str);
+						console.log(str);
+					}
+				});
+
+				//Adds the notification to the notifcation database so that it can used by DailyNotif.js
+				// addNewNotification(user);
 			}
 		}
 		else {
@@ -93,7 +101,8 @@ function getUserList(thread, reachedRoot) {
 					for (var i in docs) {
 						var doc = docs[i];
 
-						if (userList.indexOf(doc.user_id) < 0) {
+						console.log(userList.indexOf('u13126777'));
+						if (userList.indexOf(doc.user_id) === -1) {
 							UserSubscriptionSettingsModel.find({user_id: doc.user_id}, function(err, docs)
 							{
 								if (docs[0].Deletion === true) {
