@@ -28,7 +28,7 @@ var owner = 'Andre'; //Owner of the deleted thread, can be updated form the db
 var reachedRoot = false; //Check to see if the root node has been reached 
 
 //actual function
-module.exports = function deleteNotification(obj) {
+function deleteNotification(obj) {
 	//Reset variables for each call to the function
 	details = obj;
 	userList = [];
@@ -48,7 +48,9 @@ module.exports = function deleteNotification(obj) {
 	} else {
 		console.log('Delete Notification not requested');
 	}
-}
+};
+
+module.exports.deleteNotification = deleteNotification;
 
 //helper functions
 function getUserList(thread, reachedRoot) {
