@@ -20,7 +20,12 @@ db.once('open', function (callback)
 {
 
 });
+
+
 var subscriptionModel = require('./models/subscription.js');
+
+
+/*
 //Dummy Request
 var subscribeRequest = {
     user_id: 'registerTestUser',
@@ -31,15 +36,22 @@ var subscribeRequest = {
 // Convert object subscribeRequest to JSON string
 var RequestString = JSON.stringify(subscribeRequest);
 
-registerForNotification(RequestString, function callback(res){
-    console.log(res);
-    subscriptionModel.find(function (err, subscriptions) {
-        if (err) return console.error(err);
-        console.log(subscriptions);
+*/
+
+
+function GlobalRegisterForNotification(jsonObject) {
+    var RequestString = JSON.stringify(jsonObject);
+
+    registerForNotification(RequestString, function callback(res) {
+        console.log(res);
+        subscriptionModel.find(function (err, subscriptions) {
+            if (err) return console.error(err);
+            console.log(subscriptions);
+        });
     });
-});
+}
 
-
+module.exports.GlobalRegisterForNotification = GlobalRegisterForNotification;
 
 /*
  ****** Core functionality function *********
@@ -48,7 +60,7 @@ registerForNotification(RequestString, function callback(res){
  * * callbackFunction called when async calls within this function have completed. Used instead of return statement which only works synchronously
  * * returns a result JSON describing the result of the action performed by the function
  */
-module.exports = function registerForNotification(jsonRequest, callbackFunction)
+function registerForNotification(jsonRequest, callbackFunction)
 {
     var req = JSON.parse(jsonRequest);
     var result; // JSON string containing the result of operation performed by EditSubscription or any errors.
@@ -97,7 +109,3 @@ module.exports = function registerForNotification(jsonRequest, callbackFunction)
         });
     }
 }
-
-
-
-    
