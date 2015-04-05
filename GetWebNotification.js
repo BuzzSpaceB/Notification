@@ -16,9 +16,16 @@ var Notification = require('./models/notification.js');
 var TestObj ={
 	user_id:'u11008602'
 };
-//console.log(GetWebNotifications(JSON.stringify(TestObj)));
 function GetWebNotifications(obj) 
 {
+	if(!obj)
+	{
+		throw "Undefined Object";
+	}
+	if(!obj.user_id)
+	{
+		throw "user_id not specified in the object";
+	}
 	var details = JSON.parse(obj);
 	var notifs = Notification.find({user_id: details.user_id},function(err,docs)
 	{

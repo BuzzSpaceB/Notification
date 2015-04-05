@@ -5,19 +5,6 @@ var DailyEmail = require('./DailyNotif.js');
 //Start Daily Email Functions - Default Midnight
 DailyEmail();
 
-//Start Daily Email with Specific time
-/*
-	@param Time Requires an hour and minute containing JSON object
-	@author Matthew
-*/
-Var Time = {
-	hour:12,
-	minute:00
-};
-
-/*
-DailyEmail(JSON.stringify(Time));
-*/
 
 /***********************************************************Delete Notification***************************************************/
 var DeleteNotification = require('./DeleteNotif.js');
