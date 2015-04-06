@@ -64,10 +64,12 @@ var clearRegisteredToRequest = {
 function GlobalEditSubscription(jsonObject){
     EditSubscription(JSON.stringify(jsonObject), function callback(res){
         // do whatever with res which is the result of EditSubscription
-        console.log(res);
-        subscriptionModel.find(function (err, subscriptions) {
-            if (err) return console.error(err);
-            console.log(subscriptions);
+        //console.log(res);
+        //subscriptionModel.find(function (err, subscriptions) {
+        //    if (err) return console.error(err);
+        //    console.log(subscriptions);
+        
+        mongoose.disconnect();
         });
     });
 }
