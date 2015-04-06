@@ -61,15 +61,18 @@ var clearRegisteredToRequest = {
 
 // callback used to retrieve result of EditSubscription function
 // example of how to call EditSubscription
-EditSubscription(JSON.stringify(AddRegisteredToRequest), function callback(res){
-    // do whatever with res which is the result of EditSubscription
-    console.log(res);
-    subscriptionModel.find(function (err, subscriptions) {
-        if (err) return console.error(err);
-        console.log(subscriptions);
+function GlobalEditSubscription(jsonObject){
+    EditSubscription(JSON.stringify(jsonObject), function callback(res){
+        // do whatever with res which is the result of EditSubscription
+        console.log(res);
+        subscriptionModel.find(function (err, subscriptions) {
+            if (err) return console.error(err);
+            console.log(subscriptions);
+        });
     });
-});
+}
 
+module.exports.GlobalEditSubscription = GlobalEditSubscription;
 
 function EditSubscription(obj, doneFunction) // doneFunction is called when asynchronous calls withing EditSubscription have completed. Used instead of return statement
 {
