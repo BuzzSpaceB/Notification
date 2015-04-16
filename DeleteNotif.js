@@ -43,8 +43,8 @@ var reachedRoot = false; //Check to see if the root node has been reached
 //actual function
 function deleteNotification(obj) {
 	//Reset variables for each call to the function
-	// details = obj;
-	details = JSON.parse(obj);
+	details = obj;
+	// details = JSON.parse(obj);
 	userList = [];
 	reachedRoot = false;
 
@@ -117,15 +117,22 @@ function getUserList(thread, reachedRoot) {
 					for (var i in docs) {
 						var doc = docs[i];
 
+						// console.log(doc);
+						// console.log(doc.user_id);
 						// console.log(userList.indexOf(doc.user_id));
 						if (userList.indexOf(doc.user_id) === -1) {
-							UserSubscriptionSettingsModel.find({user_id: doc.user_id}, function(err, docs)
+							UserSubscriptionSettingsModel.find({user_id: doc.user_id, Deletion: true}, function(err, docs)
 							{
-								if (docs[0].Deletion === true) {
+								// console.log(docs[0]);
+
+								// if (docs[0].Deletion === true) {
+								if (docs[0]) {
 									if (userList.indexOf(doc.user_id) === -1) {
+										// console.log(docs[0].user_id);
 										userList.push(docs[0].user_id);
 									}
 								}
+								// }
 							});
 						}
 					}

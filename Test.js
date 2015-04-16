@@ -62,7 +62,7 @@ app.post('/delete', function (req, res) {
     	reason: msg
     }
 
-    var str = JSON.stringify(options);
+    // var str = JSON.stringify(options);
         res.sendfile('test.html');
     DeleteNotification.deleteNotification(options);
     // console.log(str);

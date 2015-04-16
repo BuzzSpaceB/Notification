@@ -41,7 +41,7 @@ var ThreadSchema = new mongoose.Schema({
 var SubscriptionShcema = mongoose.Schema({
     user_id: String,
 	registeredTo: [String],
-	Thread_id: String
+	thread_id: String
 });
 var UserSubscriptionSettingsSchema = mongoose.Schema (
 {
@@ -422,7 +422,7 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 		{
 			user_id: "Matt",
 			registeredTo: ["All"],
-			Thread_id: "root"
+			thread_id: "root"
 		});
 		newSubscription.save(function (err, newSubscription) 
 		{
@@ -440,7 +440,7 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 		{
 			user_id: "u13126777",
 			registeredTo: ["u10075268"],
-			Thread_id: "root"
+			thread_id: "root"
 		});
 		newSubscription.save(function (err, newSubscription) 
 		{
@@ -458,7 +458,7 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 		{
 			user_id: "u13020006",
 			registeredTo: ["u10075268","u13126777"],
-			Thread_id: "b1"
+			thread_id: "b1"
 		});
 		newSubscription.save(function (err, newSubscription) 
 		{
@@ -476,7 +476,7 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 		{
 			user_id: "u10075268",
 			registeredTo: ["u13020006","u13126777"],
-			Thread_id: "c2"
+			thread_id: "c2"
 		});
 		newSubscription.save(function (err, newSubscription) 
 		{
@@ -494,7 +494,7 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 		{
 			user_id: "u13410378",
 			registeredTo: ["u13020006","u13126777","u11008602"],
-			Thread_id: "root"
+			thread_id: "root"
 		});
 		newSubscription.save(function (err, newSubscription) 
 		{
