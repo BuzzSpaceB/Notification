@@ -11,12 +11,12 @@
  * Inserts a new UserSubscriptionsSettings document
  */
  
-var mongoose = require('mongoose')
-	, ds = require('DatabaseStuff');
+var mongoose = require('mongoose');/*
+	, ds = require('DatabaseStuff');*/
 
-ds.init(mongoose);//this line is very important
+//ds.init(mongoose);//this line is very important
 
-var subSettingsModel = ds.models.user_subscription_settings_schema;
+var subSettingsModel = require('./DatabaseStuff/models/subscription.js');
 
 
 

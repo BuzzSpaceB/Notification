@@ -1,5 +1,6 @@
 var send = require('./Email.js');
 var DeleteNotification = require('./DeleteNotif.js');
+var DailyNotification = require('./DailyNotif.js');
 
 var express = require('express'),
     app = express();
@@ -27,6 +28,11 @@ app.post('/appraisal', function (req, res) {
     var str = JSON.stringify(options);
 	res.sendfile('test.html');
     send(str);
+});
+
+app.post('/DailyNotif', function (req, res) {
+    res.sendfile('test.html');
+	DailyNotification();
 });
 
 app.post('/notify', function (req, res) {

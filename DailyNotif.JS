@@ -1,7 +1,7 @@
 // FROM HERE Not Required, used for testing purposes only
 var send = require('./Email.js');
 var schedule = require('node-schedule');
-var mongoose = require('mongoose')
+/*var mongoose = require('mongoose');
 	, ds = require('DatabaseStuff');
 
 ds.init(mongoose);//this line is very important;
@@ -38,6 +38,12 @@ var Notification = require('./DatabaseStuff/models/notification.js');
 var UserSubscriptionSettingsModel = require('./DatabaseStuff/models/user_subscription_settings_schema.js');
 //CheckDB(); //USED for testing purposes (Send the email now rather than wait for midnight)
 //*******************************************************************************************TO HERE
+//****DEMO ONLY****************/
+module.exports = function DoAction()
+{
+	CheckDB();
+}
+//************************************TO HERE
 var options = new Array();
 var emailCount = 0;
 function CheckDB()
@@ -54,7 +60,7 @@ function CheckDB()
 				options[emailCount] = 
 				{
 					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-					to : docs[emailCount].user_id+"@tuks.co.za",               //Change this to the LDAP Email if possible
+					to : docs1[0].preffered_email,//docs[emailCount].user_id+"@tuks.co.za",               //Change this to the LDAP Email if possible
 					subject: "New Daily Notification",
 					plain: docs[emailCount].date_time + " " + docs[emailCount].type + " "  + docs[emailCount].content,
 					html: docs[emailCount].date_time + " <b>" + docs[emailCount].type + "</b> "  + docs[emailCount].content
@@ -127,7 +133,7 @@ rule.minute = 00;
 console.log(new Date());
 var j = schedule.scheduleJob(rule, function()
 {
-	mongoose.connect("mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib");
+	mongoose.connect('mongodb://localhost:27017/db');
     console.log('I Logged at Midnight' + new Date());
 	CheckDB();
 });

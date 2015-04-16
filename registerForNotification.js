@@ -11,13 +11,13 @@
  * Inserts a new subscriptionModel document
  */
 
-var mongoose = require('mongoose'), 
-	ds = require('DatabaseStuff');
+var mongoose = require('mongoose');/*, 
+	ds = require('DatabaseStuff');*/
 
-ds.init(mongoose);//this line is very important
+//ds.init(mongoose);//this line is very important
 
 
-var subscriptionModel = ds.models.subscription;
+var subscriptionModel = require('./DatabaseStuff/models/subscription.js');
 
 
 /*

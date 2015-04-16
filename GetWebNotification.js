@@ -1,10 +1,10 @@
 var express = require('express'),
     app = express();
 var schedule = require('node-schedule');
-var mongoose = require('mongoose'), 
-	ds = require('DatabaseStuff');
+var mongoose = require('mongoose');/*, 
+	ds = require('DatabaseStuff');*/
 
-var Notification = ds.model.notification;
+var Notification = require('./DatabaseStuff/models/notification.js');
 //Expects a JSON String containing the User_id of user requesting Notifications
 var TestObj ={
 	user_id:'u11008602'

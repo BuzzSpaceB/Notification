@@ -5,16 +5,16 @@ var schedule = require('node-schedule');
 
 
 /* Database connection */
-var mongoose = require('mongoose')
-	, ds = require('DatabaseStuff');
+var mongoose = require('mongoose');/*
+	, ds = require('DatabaseStuff');*/
 
-ds.init(mongoose);//this line is very important
+//ds.init(mongoose);//this line is very important
 
 
 /*Database access*/
-var Threads = ds.models.thread;
-var Subscription = ds.models.subscription;
-var Notification = ds.models.notification;
+var Threads = require('./DatabaseStuff/models/thread.js');
+var Subscription = require('./DatabaseStuff/models/subscription.js');
+var Notification = require('./DatabaseStuff/models/notification.js');
 
 /*Global variables*/
 var callingThread;

@@ -5,11 +5,11 @@
  * Modified: 03/04/2015
  */
 
-var mongoose = require('mongoose'), 
-	ds = require('DatabaseStuff');
+var mongoose = require('mongoose');
+	/*ds = require('DatabaseStuff');
 
-     ds.init(mongoose);//this line is very important
-var subSettingsModel = ds.models.user_subscription_settings_schema;
+     ds.init(mongoose);//this line is very important*/
+var subSettingsModel = require('./DatabaseStuff/models/user_subscription_settings_schema.js');
 
 // dummy request variable
 var editDeletionRequest = {

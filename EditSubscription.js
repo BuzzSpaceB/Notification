@@ -5,10 +5,10 @@
  * Modified: 03/04/2015
  */
 
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');/*
 	, ds = require('DatabaseStuff');
-
-var subscriptionModel = ds.models.subscription;
+*/
+var subscriptionModel = require('./DatabaseStuff/models/subscription.js');
 
 
 // dummy request variable
