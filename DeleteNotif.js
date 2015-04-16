@@ -1,7 +1,8 @@
 var send = require('./Email.js');
 
-var mongoose = require('mongoose');
-// mongoose.connect('mongodb://197.88.21.137:27017/db'); // connect to database
+////Initialize database stuff (old requirements)
+/*var mongoose = require('mongoose');
+mongoose.connect('mongodb://197.88.21.137:27017/db'); // connect to database
 mongoose.connect("mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib");
 
 var db = mongoose.connection;
@@ -9,15 +10,27 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) 
 {
 	;
-});
+});*/
 
-
-//Models required
-var user = require('./models/user.js');
+//Models required (old requirements)
+/*var user = require('./models/user.js');
 var threadsModel = require('./models/thread.js');
 var notificationModel = require('./models/notification.js');
 var subscriptionModel = require('./models/subscription.js');
-var UserSubscriptionSettingsModel = require('./models/user_subscription_settings_schema.js');
+var UserSubscriptionSettingsModel = require('./models/user_subscription_settings_schema.js');*/
+
+//Initialize database stuff (latest requirements)
+var mongoose = require('mongoose');
+var ds = require('DatabaseStuff');
+
+ds.init(mongoose);
+
+//Models required (latest requirements)
+var user = ds.models.user;
+var threadsModel = ds.models.thread;
+var notificationModel = ds.models.notification;
+var subscriptionModel = ds.models.subscription;
+var UserSubscriptionSettingsModel = ds.models.user_subscription_settings_schema;
 
 //global variable to store required info
 var userList = [];
