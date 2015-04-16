@@ -24,13 +24,20 @@ var postCreator,currentSessionUser,appraisedThread_id,myAppraisalType;
 var request, response;
 var details;
 
-var mongoose = require('mongoose'), ds = require('DatabaseStuff');
-ds.init(mongoose);
+var mongoose = require('mongoose');
+mongoose.connect("mongodb://localhost:27017/db"); // connect to database
 
-var Users = ds.models.user;
-var Subscription = ds.models.userSubscriptionSettings;
-var Notification = ds.models.notification;
-var Threads = ds.models.thread;
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) 
+{
+	;
+});
+
+var Users = require('./DatabaseStuff/models/user.js');
+var Threads = require('./DatabaseStuff/models/thread.js');
+var Notification = require('./DatabaseStuff/models/notification.js');
+var Subscription = require('./DatabaseStuff/models/user_subscription_settings_schema.js');
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx//
 
@@ -128,7 +135,7 @@ function getEmailToSendTo(user)
 	},function(err,docs)
 	{
 		
-		destinedEmail = user.post_user_id + "@tuks.co.za";
+		destinedEmail = docs[0].preffered_email;
 		sendEmail(destinedEmail, user);  
 		
 	});
