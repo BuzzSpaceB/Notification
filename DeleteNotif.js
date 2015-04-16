@@ -43,7 +43,8 @@ var reachedRoot = false; //Check to see if the root node has been reached
 //actual function
 function deleteNotification(obj) {
 	//Reset variables for each call to the function
-	details = obj;
+	// details = obj;
+	details = JSON.parse(obj)
 	userList = [];
 	reachedRoot = false;
 
@@ -99,6 +100,7 @@ function getUserList(thread, reachedRoot) {
 
 				//Adds the notification to the notifcation database so that it can used by DailyNotif.js
 				// addNewNotification(user);
+				console.log("Adding notification to db");
 			}
 		}
 		else {
