@@ -10,4 +10,4 @@ var NotificationSchema = mongoose.Schema({
     read                        : Boolean           /* Flag to show notification has been read */
 });
 
-module.export = mongoose.model("notifications", NotificationSchema);
+module.exports = mongoose.model("notifications", NotificationSchema);
