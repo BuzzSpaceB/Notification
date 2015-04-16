@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var SubscriptionShcema = mongoose.Schema({
-    User_id: String,
+    user_id: String,
 	registeredTo: [String],
 	Thread_id: String
 });
