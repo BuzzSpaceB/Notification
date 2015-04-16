@@ -52,5 +52,143 @@
 		<br>
 		<input name="SendMail" id="like" value="Delete" type="submit" />
 	</form>
+
+<hr>
+    <br>
+    <h2>Register for Notification</h2>
+    <form action='/register' method="POST">
+        Select the thread to which user registers:
+        <select id="threadSelectionRegister" name="threadRegister">
+            <option value="root">root</option>
+            <option value="a1">a1</option>
+            <option value="b1">b1</option>
+            <option value="a2">a2</option>
+            <option value="c2">c2</option>
+            <option value="b2">b2</option>
+            <option value="b3">b3</option>
+        </select>
+        <br>
+        User_id:<input type="text" name="user_id">
+        <br>
+        <br>
+        Users registered To: <input type="text" name="regTo">
+        <br>
+        <br>
+        <input name="Register" value="Register" type="submit" />
+    </form>
+    <br>
+    <hr>
+    <br>
+    <h2>Register User Notification Settings</h2>
+    <form action='/registersettings' method="POST">
+        <br>
+        User_id:<input type="text" name="UserIDSettings">
+        <br>
+        Deletion:
+        <select  name="Deletion">
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select>
+        <br>
+        Appraisal
+        <select  name="Appraisal">
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select>
+        <br>
+        InstantEmail
+        <select  name="InstantEmail">
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select>
+        <br>
+        DailyEmail
+        <select  name="DailyEmail">
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select>
+        <br>
+        <input name="Register" value="Register Settings" type="submit" />
+    </form>
+    <br>
+    <hr>
+    <br>
+    <h2>Edit Subscription</h2>
+    <form action='/edit' method="POST">
+        Select the thread to which user registers:
+        <select  name="threadRegisterEdit">
+            <option value="root">root</option>
+            <option value="a1">a1</option>
+            <option value="b1">b1</option>
+            <option value="a2">a2</option>
+            <option value="c2">c2</option>
+            <option value="b2">b2</option>
+            <option value="b3">b3</option>
+        </select>
+        <br>
+        User_id:<input type="text" name="Edit_user_id">
+        <br>
+        <br>
+        Select Type of Edit
+        <select  name="EditType">
+            <option value="Delete">Delete</option>
+            <option value="Edit">Edit</option>
+        </select>
+        <br>
+        Select Edit Action
+        <select  name="EditAction">
+            <option value="Editthread_id">Editthread_id</option>
+            <option value="AddRegTo">AddRegTo</option>
+            <option value="DeleteRegTo">DeleteRegTo</option>
+            <option value="ClearRegTo">ClearRegTo</option>
+        </select>
+        <br>
+        Delete registered To User: <input type="text" name="DeleteRegTo">
+        <br>
+        <br>
+        New registered To User: <input type="text" name="NewRegTo">
+        <br>
+
+        Set thread_id to (Only active if Editthread_id selected as EditAction):
+        <select  name="newThreadID">
+            <option value="root">root</option>
+            <option value="a1">a1</option>
+            <option value="b1">b1</option>
+            <option value="a2">a2</option>
+            <option value="c2">c2</option>
+            <option value="b2">b2</option>
+            <option value="b3">b3</option>
+        </select>
+        <br>
+        <input name="Register" value="SubmitEdit" type="submit" />
+    </form>
+
+    <br>
+    <hr>
+    <br>
+    <h2>EDIT User Notification Settings</h2>
+    <form action='/editsettings' method="POST">
+        <br>
+        User_id:<input type="text" name="UserIDEditSettings">
+        <br>
+        EditWhat:
+        <select  name="Editwhat">
+            <option value="Deletion">Deletion</option>
+            <option value="Appraisal">Appraisal</option>
+            <option value="InstantEmail">InstantEmail</option>
+            <option value="DailyEmail">DailyEmail</option>
+        </select>
+        <br>
+        SetAs:
+        <select  name="SetAs">
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select>
+       <br>
+        <input name="Register" value="Edit Settings" type="submit" />
+    </form>
+<hr>
+<br>
+<br>
 </body>
 </html>
