@@ -50,7 +50,6 @@ function addAppraisalToDB(details)
 	},function(err,docs)
 	{
 		var instant = docs.InstantEmail;
-		instant = true;
 		if(instant == true)
 		{
             console.log("instant");
@@ -149,7 +148,7 @@ function getEmailToSendTo(user)
 function sendEmail(destinedEmail, obj)
 {
 				details =obj;
-				var user = JSON.stringify(details.post_user_id);
+				var user = JSON.stringify(details.current_user_id);
 				var type = JSON.stringify(details.appraisalType);
 	
 	
