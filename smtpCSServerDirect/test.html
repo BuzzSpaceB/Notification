@@ -1,0 +1,56 @@
+<html>
+<head>
+	<title>TestingNodeJS</title>
+</head>
+<body>
+	<h1>Testing Email Functionality</h1>
+	<h2>Plain Notification</h2>
+	<form action='notify' method="POST">
+		<input name="SendMail" id="like" value="SendMail" type="submit" />
+	</form>
+	<br>
+	<hr>
+	<br>
+	<form action='DailyNotif' method="POST">
+		<input name="DailyNotif" id="like" value="Send Daily Notifications Now!" type="submit" />
+	</form>
+	<br>
+	<hr>
+	<br>
+	<h2>Appraisal Notification</h2>
+	<form action='/appraisal' method="POST">
+		Select the type of appraisal:
+		<select id="appraisalType" name="appraisal">
+			<option value="Funny">Funny</option>
+			<option value="Like">Like</option>
+			<option value="Dislike">Dislike</option>
+		</select>
+		<input name="SendMail" id="like" value="appraise" type="submit" />
+	</form>
+	<br>
+	<hr>
+	<br>
+	<h2>Delete Notification</h2>
+	<form action='/delete' method="POST">
+		Select the thread to be deleted:
+		<select id="threadSelection" name="thread">
+			<option value="root">root</option>
+			<option value="a1">a1</option>
+			<option value="b1">b1</option>
+			<option value="a2">a2</option>
+			<option value="c2">c2</option>
+			<option value="b2">b2</option>
+			<option value="b3">b3</option>
+		</select>
+		<br>
+		Would you like to send a notification about the delete
+		<input type="radio" name="sendNotification" value="true" checked>Yes
+		<input type="radio" name="sendNotification" value="false">No
+		<br>
+		Enter the reason for deletion:<input type="text" name="message">
+		<br>
+		<br>
+		<input name="SendMail" id="like" value="Delete" type="submit" />
+	</form>
+</body>
+</html>
