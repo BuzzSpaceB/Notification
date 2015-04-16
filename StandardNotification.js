@@ -5,20 +5,16 @@ var schedule = require('node-schedule');
 
 
 /* Database connection */
-var mongoose = require('mongoose');
-mongoose.connect("mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib");
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function (callback) 
-{
-	;
-});
+var mongoose = require('mongoose')
+	, ds = require('DatabaseStuff');
+
+ds.init(mongoose);//this line is very important
 
 
 /*Database access*/
-var Threads = require('./models/thread');
-var Subscription = require('./models/subscription');
-var Notification = require('./models/notification');
+var Threads = ds.models.thread;
+var Subscription = ds.models.subscription;
+var Notification = ds.models.notification;
 
 /*Global variables*/
 var callingThread;

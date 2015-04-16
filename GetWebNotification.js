@@ -1,17 +1,10 @@
 var express = require('express'),
     app = express();
 var schedule = require('node-schedule');
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://197.88.21.137:27017/ServerCopy'); // connect to database
+var mongoose = require('mongoose'), 
+	ds = require('DatabaseStuff');
 
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function (callback) 
-{
-	;
-});
-
-var Notification = require('./models/notification.js');
+var Notification = ds.model.notification;
 //Expects a JSON String containing the User_id of user requesting Notifications
 var TestObj ={
 	user_id:'u11008602'

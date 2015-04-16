@@ -11,17 +11,12 @@
  * Inserts a new UserSubscriptionsSettings document
  */
  
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib'); // connect to database
+var mongoose = require('mongoose')
+	, ds = require('DatabaseStuff');
 
-db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function (callback)
-{
+ds.init(mongoose);//this line is very important
 
-});
-
-var subSettingsModel = require('./models/user_subscription_settings_schema.js');
+var subSettingsModel = ds.models.user_subscription_settings_schema;
 
 
 

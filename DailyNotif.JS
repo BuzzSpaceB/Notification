@@ -3,18 +3,13 @@ var send = require('./Email.js');
 var express = require('express'),
     app = express();
 var schedule = require('node-schedule');
-var mongoose = require('mongoose');
-//mongoose.connect('mongodb://197.88.21.137:27017/ServerCopy');
-mongoose.connect("mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib");
+var mongoose = require('mongoose')
+	, ds = require('DatabaseStuff');
 
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function (callback) 
-{
-	;
-});
-var Notification = require('./models/notification.js');;
-var UserSubscriptionSettingsModel = require('./models/user_subscription_settings_schema.js');;
+ds.init(mongoose);//this line is very important;
+
+var Notification = ds.models.notification;
+var UserSubscriptionSettingsModel = ds.models.user_subscription_settings_schema;
 //CheckDB(); //USED for testing purposes (Send the email now rather than wait for midnight)
 //*******************************************************************************************TO HERE
 var options = new Array();

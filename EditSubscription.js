@@ -5,16 +5,10 @@
  * Modified: 03/04/2015
  */
 
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib'); // connect to database
+var mongoose = require('mongoose')
+	, ds = require('DatabaseStuff');
 
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function (callback)
-{
-
-});
-var subscriptionModel = require('./models/subscription.js');;
+var subscriptionModel = ds.models.subscription;
 
 
 // dummy request variable
