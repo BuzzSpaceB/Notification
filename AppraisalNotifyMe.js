@@ -65,7 +65,7 @@ function addAppraisalToDB(details)
 }
 
 //This is so that the method is globally accessable.
-module.exports.addAppraisal = addAppraisalToDB;
+module.exports.addAppraisalToDB = addAppraisalToDB;
 
 //xxxxxxxxxxxxxxxxxxxxxx
 function addNewNotification(readVariable,details)
@@ -136,6 +136,7 @@ function getEmailToSendTo(user)
 	{
 		
 		destinedEmail = docs[0].preffered_email;
+		console.log(destinedEmail);
 		sendEmail(destinedEmail, user);  
 		
 	});
@@ -147,7 +148,7 @@ function getEmailToSendTo(user)
 function sendEmail(destinedEmail, obj)
 {
 				details =obj;
-				var user = JSON.stringify(details.post_user_id);
+				var user = JSON.stringify(details.current_user_id);
 				var type = JSON.stringify(details.appraisalType);
 	
 	

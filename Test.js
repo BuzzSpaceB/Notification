@@ -1,6 +1,7 @@
 var send = require('./Email.js');
 var DeleteNotification = require('./DeleteNotif.js');
 var DailyNotification = require('./DailyNotif.js');
+var AddAppraisalToDB = require('./AppraisalNotifyMe.js');
 
 var express = require('express'),
     app = express();
@@ -15,19 +16,19 @@ app.post('/', function (req, res) {
 
 //Builds the content used to send the email using the appraisal type
 app.post('/appraisal', function (req, res) {
-    var appraisal = req.body.appraisal;
+   
+ var appraisal = req.body.appraisal;
 
     var options = {
-        from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-        to : "DiscussionThree@gmail.com",                        //Change this to the email addess you want to receive the email. This will eventually be the user's email.
-        Subject: "New Buzz Appraisal Notification",
-        plain: "New Buzz Appraisal Notification",
-        html: "User has given your post this appraisal:  " + appraisal
+    	current_user_id: 'u11008602',
+    	post_user_id: 'u10075268',
+    	appraisedThread_id: 'c2',
+		appraisalType: appraisal
     }
 
-    var str = JSON.stringify(options);
-	res.sendfile('test.html');
-    send(str);
+        res.sendfile('test.html');
+    AddAppraisalToDB.addAppraisalToDB(options);
+	
 });
 
 app.post('/DailyNotif', function (req, res) {
