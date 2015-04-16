@@ -1,36 +1,36 @@
 var send = require('./Email.js');
 
-////Initialize database stuff (old requirements)
-/*var mongoose = require('mongoose');
-mongoose.connect('mongodb://197.88.21.137:27017/db'); // connect to database
-mongoose.connect("mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib");
+//Initialize database stuff (old requirements)
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/db'); // connect to database
+// mongoose.connect("mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib");
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) 
 {
 	;
-});*/
+});
 
 //Models required (old requirements)
-/*var user = require('./models/user.js');
-var threadsModel = require('./models/thread.js');
-var notificationModel = require('./models/notification.js');
-var subscriptionModel = require('./models/subscription.js');
-var UserSubscriptionSettingsModel = require('./models/user_subscription_settings_schema.js');*/
+var user = require('./DatabaseStuff/models/user.js');
+var threadsModel = require('./DatabaseStuff/models/thread.js');
+var notificationModel = require('./DatabaseStuff/models/notification.js');
+var subscriptionModel = require('./DatabaseStuff/models/subscription.js');
+var UserSubscriptionSettingsModel = require('./DatabaseStuff/models/user_subscription_settings_schema.js');
 
 //Initialize database stuff (latest requirements)
-var mongoose = require('mongoose');
+/*var mongoose = require('mongoose');
 var ds = require('DatabaseStuff');
 
-ds.init(mongoose);
+ds.init(mongoose);*/
 
 //Models required (latest requirements)
-var user = ds.models.user;
+/*var user = ds.models.user;
 var threadsModel = ds.models.thread;
 var notificationModel = ds.models.notification;
 var subscriptionModel = ds.models.subscription;
-var UserSubscriptionSettingsModel = ds.models.user_subscription_settings_schema;
+var UserSubscriptionSettingsModel = ds.models.user_subscription_settings_schema;*/
 
 //global variable to store required info
 var userList = [];
@@ -84,7 +84,8 @@ function getUserList(thread, reachedRoot) {
 
 						var options = {
 							from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-							to : user + "@tuks.co.za",
+							// to : user + "@tuks.co.za", //Hack incase of lack of get email function
+							to : docs[0].preffered_email, //Send the email using the preffered email from the database
 							Subject: "New Deletion Notification",
 							plain: "New Buzz Space Deletion Notification" + currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason,
 							html: "New Buzz Space Deletion Notification <br>" + currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason
