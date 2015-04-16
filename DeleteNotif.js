@@ -44,7 +44,7 @@ var reachedRoot = false; //Check to see if the root node has been reached
 function deleteNotification(obj) {
 	//Reset variables for each call to the function
 	// details = obj;
-	details = JSON.parse(obj)
+	details = JSON.parse(obj);
 	userList = [];
 	reachedRoot = false;
 

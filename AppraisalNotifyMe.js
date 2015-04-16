@@ -50,6 +50,7 @@ function addAppraisalToDB(details)
 	},function(err,docs)
 	{
 		var instant = docs.InstantEmail;
+		instant = true;
 		if(instant == true)
 		{
             console.log("instant");
@@ -65,7 +66,7 @@ function addAppraisalToDB(details)
 }
 
 //This is so that the method is globally accessable.
-module.exports.addAppraisal = addAppraisalToDB;
+module.exports.addAppraisalToDB = addAppraisalToDB;
 
 //xxxxxxxxxxxxxxxxxxxxxx
 function addNewNotification(readVariable,details)
@@ -136,6 +137,7 @@ function getEmailToSendTo(user)
 	{
 		
 		destinedEmail = docs[0].preffered_email;
+		console.log(destinedEmail);
 		sendEmail(destinedEmail, user);  
 		
 	});
