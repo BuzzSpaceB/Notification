@@ -69,6 +69,102 @@ app.post('/delete', function (req, res) {
     // send(str);
 });
 
+app.post('/register', function (req, res) {
+
+    var registerForNotification = require('./registerForNotification');
+    var userID = req.body.user_id;
+    var threadName = req.body.threadRegister;
+    var regTo = req.body.regTo;
+    var regToArr = regTo.split(",");
+    console.log(regTo);
+
+    var options = {
+        user_id: userID,
+        thread_id: threadName,
+        registeredTo: regToArr
+    };
+
+    var str = JSON.stringify(options);
+    //res.sendfile('test.html');
+    editSubscription.GlobalEditSubscription(options, function(result){res.send(result);});
+
+});
+
+app.post('/edit', function (req, res) {
+    var EditSubscription = require('./EditSubscription');
+    var userID = req.body.Edit_user_id;
+    var threadName = req.body.threadRegisterEdit;
+    var editType = req.body.EditType;
+    var editAction = req.body.EditAction;
+    var deleteRegTo = req.body.DeleteRegTo;
+    var newRegTo = req.body.NewRegTo;
+    var newThreadID = req.body.newThreadID;
+
+
+    var options = {
+        user_id: userID,
+        thread_id: threadName,
+        EditAction: editAction,
+        Type: editType,
+        delete: deleteRegTo,
+        newRegisteredTo: newRegTo,
+        oldthread_id: threadName,
+        newthread_id: newThreadID
+    };
+
+    var str = JSON.stringify(options);
+   // res.sendfile('test.html');
+    EditSubscription.GlobalEditSubscription(options, function(result){res.send(result);});
+
+});
+
+app.post('/registersettings', function (req, res) {
+    var RegisterSettings = require('./registerUserNotificationSettings');
+    var userID = req.body.UserIDSettings;
+
+    var deletion = req.body.Deletion == true;
+    var appraisal = req.body.Appraisal == true;
+    var instantemail = req.body.InstantEmail == true;
+    var dailyemail = req.body.DailyEmail == true;
+
+
+
+    var options = {
+        user_id: userID,
+        Deletion: deletion,
+        Appraisal: appraisal,
+        InstantEmail: instantemail,
+        DailyEmail: dailyemail
+    };
+
+    var str = JSON.stringify(options);
+    // res.sendfile('test.html');
+    RegisterSettings.GlobalRegisterUserNotificationSettings(options, function(result){res.send(result);});
+
+});
+
+app.post('/editsettings', function (req, res) {
+    var EditSettings = require('./EditNotificationSettings');
+    var userID = req.body.UserIDEditSettings;
+
+    var editwhat = req.body.Editwhat;
+
+    var setas = req.body.SetAs == true;
+
+
+
+    var options = {
+        user_id: userID,
+        editWhat: editwhat,
+        SetAs: setas
+    };
+
+    var str = JSON.stringify(options);
+    // res.sendfile('test.html');
+    EditSettings.GlobalEditNotificationSettings(options, function(result){res.send(result);});
+
+});
+
 //Gets the specific action and opens the html page
 app.get('/', function (req, res) {
     res.sendfile('test.html');
