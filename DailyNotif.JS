@@ -5,9 +5,37 @@ var mongoose = require('mongoose')
 	, ds = require('DatabaseStuff');
 
 ds.init(mongoose);//this line is very important;
+/*
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://197.88.21.137:27017/db'); // connect to database
+mongoose.connect("mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib");
 
-var Notification = ds.models.notification;
-var UserSubscriptionSettingsModel = ds.models.user_subscription_settings_schema;
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) 
+{
+	;
+});*/
+
+//Models required (old requirements)
+/*var user = require('./models/user.js');
+var threadsModel = require('./models/thread.js');
+var notificationModel = require('./models/notification.js');
+var subscriptionModel = require('./models/subscription.js');
+var UserSubscriptionSettingsModel = require('./models/user_subscription_settings_schema.js');
+
+*/
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/db'); // connect to database
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) 
+{
+	;
+});
+
+var Notification = require('./DatabaseStuff/models/notification.js');
+var UserSubscriptionSettingsModel = require('./DatabaseStuff/models/user_subscription_settings_schema.js');
 //CheckDB(); //USED for testing purposes (Send the email now rather than wait for midnight)
 //*******************************************************************************************TO HERE
 var options = new Array();
