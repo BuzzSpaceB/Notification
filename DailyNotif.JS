@@ -37,8 +37,6 @@ db.once('open', function (callback)
 var Notification = require('./DatabaseStuff/models/notification.js');
 var UserSubscriptionSettingsModel = require('./DatabaseStuff/models/user_subscription_settings_schema.js');
 var userModel = require('./DatabaseStuff/models/user.js');
-//CheckDB(); //USED for testing purposes (Send the email now rather than wait for midnight)
-//*******************************************************************************************TO HERE
 //****DEMO ONLY****************/
 module.exports = function DoAction()
 {
@@ -83,7 +81,6 @@ function CheckDB()
 		}
 		
 	});
-	//mongoose.disconnect();
 }
 var toSend = new Array();
 var count = 0;
@@ -131,10 +128,7 @@ function addEmail(mess)
 var rule = new schedule.RecurrenceRule();
 rule.hour = 00;
 rule.minute = 00;
-console.log(new Date());
 var j = schedule.scheduleJob(rule, function()
 {
-	mongoose.connect('mongodb://localhost:27017/db');
-    console.log('I Logged at Midnight' + new Date());
-	CheckDB();
+    console.log('I Send Emails' + new Date());
 });
