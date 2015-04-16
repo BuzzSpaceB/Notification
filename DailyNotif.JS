@@ -36,12 +36,14 @@ db.once('open', function (callback)
 
 var Notification = require('./DatabaseStuff/models/notification.js');
 var UserSubscriptionSettingsModel = require('./DatabaseStuff/models/user_subscription_settings_schema.js');
+var userModel = require('./DatabaseStuff/models/user.js');
 //CheckDB(); //USED for testing purposes (Send the email now rather than wait for midnight)
 //*******************************************************************************************TO HERE
 //****DEMO ONLY****************/
 module.exports = function DoAction()
 {
 	CheckDB();
+	console.log("Done");
 }
 //************************************TO HERE
 var options = new Array();
@@ -54,34 +56,34 @@ function CheckDB()
 		
 		for(var i=0;i<docs.length;i++)
 		{
-
-			var subs = UserSubscriptionSettingsModel.find({user_id:docs[i].user_id, DailyEmail:true},function(err,docs1)
+			var users = userModel.find({user_id:docs[i].user_id},function(err,docs2)
 			{
-				options[emailCount] = 
+				var subs = UserSubscriptionSettingsModel.find({user_id:docs[i].user_id, DailyEmail:true},function(err,docs1)
 				{
-					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-					to : docs1[0].preffered_email,//docs[emailCount].user_id+"@tuks.co.za",               //Change this to the LDAP Email if possible
-					subject: "New Daily Notification",
-					plain: docs[emailCount].date_time + " " + docs[emailCount].type + " "  + docs[emailCount].content,
-					html: docs[emailCount].date_time + " <b>" + docs[emailCount].type + "</b> "  + docs[emailCount].content
-				};
-				addEmail(JSON.stringify(options[emailCount]));
-				emailCount++;
-				if(emailCount == (docs.length))
-				{
-					addEmail("DONE");
-				}
+					options[emailCount] = 
+					{
+						from: 'Buzz No Reply <DiscussionThree@gmail.com>',
+						to : docs2[0].preffered_email,//docs[emailCount].user_id+"@tuks.co.za",               //Change this to the LDAP Email if possible
+						subject: "New Daily Notification",
+						plain: docs[emailCount].date_time + " " + docs[emailCount].type + " "  + docs[emailCount].content,
+						html: docs[emailCount].date_time + " <b>" + docs[emailCount].type + "</b> "  + docs[emailCount].content
+					};
+					addEmail(JSON.stringify(options[emailCount]));
+					emailCount++;
+					if(emailCount == (docs.length))
+					{
+						addEmail("DONE");
+					}
+				});
 			});
-			
 		}
-		
 		for(var i = 0;i<options.length;i++)
 		{
 			
 		}
 		
 	});
-	mongoose.disconnect();
+	//mongoose.disconnect();
 }
 var toSend = new Array();
 var count = 0;
@@ -113,7 +115,6 @@ function addEmail(mess)
 		{
 			if(toSend[i].to != "")
 			{
-				console.log(i);
 				toSend[i].plain = "You have the following unread Notifications: \n" + toSend[i].plain;
 				toSend[i].html = "You have the following <b>unread</b> Notifications: <br>" + toSend[i].html;
 				var str = JSON.stringify(toSend[i]);

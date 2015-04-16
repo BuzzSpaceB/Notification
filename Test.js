@@ -39,7 +39,7 @@ app.post('/notify', function (req, res) {
 
     var options = {
         from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-        to : "u12207871@tuks.co.za",
+        to : "DiscussionThree@gmail.com",
         Subject: "New Notification",
         plain: "New Buzz Space Notification",
         html: "<b>New Buzz Space Notification </br> Please  <a href='http://www.cs.up.ac.za'>Click Here</a> To see the post</b>"
