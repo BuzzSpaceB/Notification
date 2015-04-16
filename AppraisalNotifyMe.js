@@ -24,20 +24,13 @@ var postCreator,currentSessionUser,appraisedThread_id,myAppraisalType;
 var request, response;
 var details;
 
-var mongoose = require('mongoose');
-mongoose.connect("mongodb://d3user:DdJXhhsd2@proximus.modulusmongo.net:27017/purYv9ib"); // connect to database
+var mongoose = require('mongoose'), ds = require('DatabaseStuff');
+ds.init(mongoose);
 
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function (callback) 
-{
-
-});
-
-var Users = require('./models/user.js');
-var Threads = require('./models/thread.js');
-var Notification = require('./models/notification.js');
-var Subscription = require('./models/user_subscription_settings_schema.js');
+var Users = ds.models.user;
+var Subscription = ds.models.userSubscriptionSettings;
+var Notification = ds.models.notification;
+var Threads = ds.models.thread;
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx//
 
