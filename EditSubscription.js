@@ -4,11 +4,26 @@
  * Group: NotificationB
  * Modified: 03/04/2015
  */
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017/db'); // connect to database
 
-var mongoose = require('mongoose');/*
-	, ds = require('DatabaseStuff');
-*/
-var subscriptionModel = require('./DatabaseStuff/models/subscription.js');
+db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback)
+{
+
+});
+
+
+var subscriptionSchema = mongoose.Schema (
+    {
+        user_id: String,
+        registeredTo: [String],
+        thread_id: String
+    });
+
+
+subscriptionModel = mongoose.model("Subscription", subscriptionSchema);
 
 
 // dummy request variable
@@ -55,18 +70,19 @@ var clearRegisteredToRequest = {
 
 // callback used to retrieve result of EditSubscription function
 // example of how to call EditSubscription
-function GlobalEditSubscription(jsonObject){
-    EditSubscription(JSON.stringify(jsonObject), function callback(res){
+function GlobalEditSubscription(jsonObject, resultFunc){
+    EditSubscription(JSON.stringify(jsonObject), resultFunc);//function callback(res){
         // do whatever with res which is the result of EditSubscription
         //console.log(res);
         //subscriptionModel.find(function (err, subscriptions) {
         //    if (err) return console.error(err);
         //    console.log(subscriptions);
-        
-        mongoose.disconnect();
-        });
-    });
-}
+
+
+
+
+    };
+
 
 module.exports.GlobalEditSubscription = GlobalEditSubscription;
 

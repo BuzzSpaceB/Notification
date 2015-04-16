@@ -10,14 +10,22 @@
  * Checks data validity, AND CHECKS FOR DUPLICATES AND THEN ABORTS REGISTRATION
  * Inserts a new UserSubscriptionsSettings document
  */
- 
-var mongoose = require('mongoose');/*
-	, ds = require('DatabaseStuff');*/
 
-//ds.init(mongoose);//this line is very important
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017/db'); // connect to database
 
-var subSettingsModel = require('./DatabaseStuff/models/subscription.js');
 
+
+
+var UserSubscriptionSettingsSchema = mongoose.Schema (
+    {
+        user_id: String,
+        Deletion: Boolean,
+        Appraisal: Boolean,
+        InstantEmail: Boolean,
+        DailyEmail: Boolean
+    });
+var subSettingsModel = mongoose.model("subscriptionsettings", UserSubscriptionSettingsSchema);
 
 
 // dummy request
@@ -30,11 +38,11 @@ var registerRequest = {
 };
 
 // Convert object subscribeRequest to JSON string
-function GlobalRegisterUserNotificationSettings(registerUserNotifSetings) {
+function GlobalRegisterUserNotificationSettings(registerUserNotifSetings, callback) {
 
     var RequestString = JSON.stringify(registerUserNotifSetings);
 
-    registerUserNotificationSettings(RequestString, function callback(res) {
+    registerUserNotificationSettings(RequestString, callback);//function callback(res) {
         /*
         console.log(res);
         subSettingsModel.find(function (err, settings) {
@@ -42,8 +50,8 @@ function GlobalRegisterUserNotificationSettings(registerUserNotifSetings) {
             console.log(settings);
         });
         */
-        mongoose.disconnect();
-    });
+
+    //});
 }
 
 //This is to make it globally accessable

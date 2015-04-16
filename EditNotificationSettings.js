@@ -6,10 +6,18 @@
  */
 
 var mongoose = require('mongoose');
-	/*ds = require('DatabaseStuff');
+mongoose.connect('mongodb://127.0.0.1:27017/db'); // connect to database
 
-     ds.init(mongoose);//this line is very important*/
-var subSettingsModel = require('./DatabaseStuff/models/user_subscription_settings_schema.js');
+var UserSubscriptionSettingsSchema = mongoose.Schema (
+    {
+        user_id: String,
+        Deletion: Boolean,
+        Appraisal: Boolean,
+        InstantEmail: Boolean,
+        DailyEmail: Boolean
+    });
+var subSettingsModel = mongoose.model("subscriptionsettings", UserSubscriptionSettingsSchema);
+
 
 // dummy request variable
 var editDeletionRequest = {
@@ -42,8 +50,8 @@ var editDailyEmailRequest = {
 
 // callback used to retrieve result of EditNotificationSettings function
 // example of how to call EditSubscription
-function GlobalEditNotificationSettings(editNotifSettings) {
-    EditNotificationSettings(JSON.stringify(editNotifSettings), function callback(res) {
+function GlobalEditNotificationSettings(editNotifSettings, callback) {
+    EditNotificationSettings(JSON.stringify(editNotifSettings), callback);//function callback(res) {
         // do whatever with res which is the result of EditSubscription
         /*
          console.log(res);
@@ -53,8 +61,9 @@ function GlobalEditNotificationSettings(editNotifSettings) {
          console.log(settings);
          });
          */
-        mongoose.disconnect();
-    });
+
+
+
 }
 
 //This is so that the method is globally accessable.

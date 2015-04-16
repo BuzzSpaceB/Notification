@@ -11,13 +11,19 @@
  * Inserts a new subscriptionModel document
  */
 
-var mongoose = require('mongoose');/*, 
-	ds = require('DatabaseStuff');*/
-
-//ds.init(mongoose);//this line is very important
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017/db'); // connect to database
 
 
-var subscriptionModel = require('./DatabaseStuff/models/subscription.js');
+var subscriptionSchema = mongoose.Schema (
+    {
+        user_id: String,
+        registeredTo: [String],
+        thread_id: String
+    });
+
+
+subModel = mongoose.model("Subscription", subscriptionSchema);
 
 
 /*
@@ -34,20 +40,20 @@ var RequestString = JSON.stringify(subscribeRequest);
 */
 
 
-function GlobalRegisterForNotification(jsonObject) {
+function GlobalRegisterForNotification(jsonObject, callback) {
     var RequestString = JSON.stringify(jsonObject);
 
-    registerForNotification(RequestString, function callback(res) {
+    registerForNotification(RequestString, callback);//function callback(res) {
         /*
         console.log(res);
-        subscriptionModel.find(function (err, subscriptions) {
+        subModel.find(function (err, subscriptions) {
             if (err) return console.error(err);
             console.log(subscriptions);
         });
         */
 
-        mongoose.disconnect();
-    });
+
+
 }
 
 module.exports.GlobalRegisterForNotification = GlobalRegisterForNotification;
@@ -86,7 +92,7 @@ function registerForNotification(jsonRequest, callbackFunction)
     }
     else
     {
-        newSub = new subscriptionModel(
+        newSub = new subModel(
             {
                 user_id: req.user_id,
                 thread_id: req.thread_id,
