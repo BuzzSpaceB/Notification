@@ -104,7 +104,7 @@ function getUserList(thread, reachedRoot) {
 			}
 		}
 		else {
-			subscriptionModel.find({Thread_id: thread}, function(err, docs)
+			subscriptionModel.find({thread_id: thread}, function(err, docs)
 			{
 				if (err) {
 					console.log(err);
