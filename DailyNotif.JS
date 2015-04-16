@@ -81,7 +81,7 @@ function CheckDB()
 		}
 		
 	});
-	momgoose.disconnect();
+	mongoose.disconnect();
 }
 var toSend = new Array();
 var count = 0;
