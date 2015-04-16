@@ -1,7 +1,5 @@
 // FROM HERE Not Required, used for testing purposes only
 var send = require('./Email.js');
-var express = require('express'),
-    app = express();
 var schedule = require('node-schedule');
 var mongoose = require('mongoose')
 	, ds = require('DatabaseStuff');
