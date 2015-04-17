@@ -182,23 +182,43 @@ function notify()
 		{
 			newNotification(list[i]);
 			AssignUserEmail(list[i]);
-			var options = {
-					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-					//to : list[i] + "@tuks.co.za",
-					to : userEmail,
-					Subject: "New Comment Notification",
-					plain: "New Buzz Space Comment Notification " + callingUser + " has commented on a post. " + " You are subscribed to " + callingUser,
-					html: "New Buzz Space Comment Notification <br> " +  callingUser + " has commented on a post. " + " You are subscribed to " + callingUser,
+
+			Users.find({ user_id: list[i]}, function(err, docs) 
+			{
+				if (err) 
+				{
+					throw err;			
 				}
-			var message = JSON.stringify(options);
-		//	console.log(message);
-			send(message);
+				else
+				{	if(docs.length == 0)
+					{
+					//	console.log("User doesn't exist..")
+					}
+					else
+					{	
+						var options = {
+							from: 'Buzz No Reply <DiscussionThree@gmail.com>',
+							//to : list[i] + "@tuks.co.za",
+							to : docs[0].preffered_email,
+							subject: "New Comment Notification",
+							plain: "New Buzz Space Comment Notification " + callingUser + " has commented on a post. " + " You are subscribed to " + callingUser,
+							html: "New Buzz Space Comment Notification <br> " +  callingUser + " has commented on a post. " + " You are subscribed to " + callingUser,
+						}
+						var message = JSON.stringify(options);
+					//	console.log(message);
+						send(message);
+						//userEmail = docs[0].preffered_email;
+					}
+				}
+			});
+			
 		}
 	}
 }
 
 function newNotification(user)
 {
+	
 	var notification = new Notification(
 	{
 		notification_id: "Comment Notification",
