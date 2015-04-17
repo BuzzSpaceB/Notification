@@ -38,7 +38,7 @@ var ThreadSchema = new mongoose.Schema({
     post_id         : String,                   /* The post that is connected to the thread */
     subject         : String                    /*The subject of the post that is connected to the thread*/
 });
-var SubscriptionShcema = mongoose.Schema({
+var SubscriptionSchema = mongoose.Schema({
     user_id: String,
 	registeredTo: [String],
 	thread_id: String
@@ -55,7 +55,7 @@ var UserSubscriptionSettingsSchema = mongoose.Schema (
 var user = mongoose.model('users', UserSchema);
 var threadsModel = mongoose.model("threads", ThreadSchema);
 var notificationModel = mongoose.model("notifications", NotificationSchema);
-var subscriptionModel = mongoose.model("subscriptions", SubscriptionShcema);
+var subscriptionModel = mongoose.model("subscriptions", SubscriptionSchema);
 var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", UserSubscriptionSettingsSchema);
 
 	var success = true;
@@ -192,7 +192,7 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 			if (err) 
 			{
 				success = false;
-				console.log("Error Adding Xoliswa User");
+				console.log("Error Adding Fritz User");
 			}
 			else 
 			{
@@ -215,7 +215,7 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 			if (err) 
 			{
 				success = false;
-				console.log("Error Adding Xoliswa User");
+				console.log("Error Adding Vrede User");
 			}
 			else 
 			{
@@ -238,7 +238,30 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 			if (err) 
 			{
 				success = false;
-				console.log("Error Adding Xoliswa User");
+				console.log("Error Adding Stacy User");
+			}
+			else 
+			{
+				success = true;
+			}
+		});
+		newUser = new user(
+		{
+			user_id				: "lramasila",
+			username            : "Lecton",           
+			roles               : [{role_name : ["Assistant Lecturer"], module: ["COS301"]}],      
+			modules      		: ["COS301"],          
+			post_count			: 1,
+			status_value		: 2, 			
+			profile_pic		    : "Hello.jpg",			
+			preffered_email		: "lectonlm@gmail.com"
+		});
+		newUser.save(function(err,newUser)
+		{
+			if (err) 
+			{
+				success = false;
+				console.log("Error Adding Lecton User");
 			}
 			else 
 			{
@@ -515,7 +538,7 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 			user_id: "u11008602",
 			Deletion: true,
 			Appraisal: true,
-			InstantEmail: false,
+			InstantEmail: true,
 			DailyEmail: true
 		});
 		newSubscriptionSetting.save(function (err, newSubscriptionSetting) 
@@ -535,7 +558,7 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 			user_id: "u13126777",
 			Deletion: true,
 			Appraisal: true,
-			InstantEmail: false,
+			InstantEmail: true,
 			DailyEmail: true
 		});
 		newSubscriptionSetting.save(function (err, newSubscriptionSetting) 
@@ -555,7 +578,7 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 			user_id: "u13020006",
 			Deletion: true,
 			Appraisal: true,
-			InstantEmail: false,
+			InstantEmail: true,
 			DailyEmail: true
 		});
 		newSubscriptionSetting.save(function (err, newSubscriptionSetting) 
@@ -575,7 +598,7 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 			user_id: "u10075268",
 			Deletion: false,
 			Appraisal: true,
-			InstantEmail: false,
+			InstantEmail: true,
 			DailyEmail: true
 		});
 		newSubscriptionSetting.save(function (err, newSubscriptionSetting) 
@@ -595,7 +618,7 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 			user_id: "u13410378",
 			Deletion: false,
 			Appraisal: true,
-			InstantEmail: false,
+			InstantEmail: true,
 			DailyEmail: true
 		});
 		newSubscriptionSetting.save(function (err, newSubscriptionSetting) 
@@ -615,7 +638,7 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 			user_id: "fsolms",
 			Deletion: false,
 			Appraisal: true,
-			InstantEmail: false,
+			InstantEmail: true,
 			DailyEmail: true
 		});
 		newSubscriptionSetting.save(function (err, newSubscriptionSetting) 
@@ -635,7 +658,7 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 			user_id: "vpieterse",
 			Deletion: false,
 			Appraisal: true,
-			InstantEmail: false,
+			InstantEmail: true,
 			DailyEmail: true
 		});
 		newSubscriptionSetting.save(function (err, newSubscriptionSetting) 
@@ -655,7 +678,27 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 			user_id: "someleze",
 			Deletion: false,
 			Appraisal: true,
-			InstantEmail: false,
+			InstantEmail: true,
+			DailyEmail: true
+		});
+		newSubscriptionSetting.save(function (err, newSubscriptionSetting) 
+		{
+			if (err) 
+			{
+				success = false;
+				console.log("Error Adding someleze Subscription Setting");
+			}
+			else 
+			{
+				success = true;
+			}
+		});
+		newSubscriptionSetting = new UserSubscriptionSettingsModel(
+		{
+			user_id: "lramasila",
+			Deletion: false,
+			Appraisal: true,
+			InstantEmail: true,
 			DailyEmail: true
 		});
 		newSubscriptionSetting.save(function (err, newSubscriptionSetting) 
@@ -782,6 +825,208 @@ var UserSubscriptionSettingsModel = mongoose.model("usersubscriptionsettings", U
 				success = true;
 			}
 		});
+		
+	//Might Break
+	var newNotif = new notificationModel(
+		{
+			notification_id: "Notif6",
+			thread_id: "A2",
+			user_id: "someleze",
+			date_time: new Date(),
+			type: "Appraisal",
+			content: "Like",
+			read: false
+		});
+		newNotif.save(function(err,newNotif)
+		{
+			if (err) 
+			{
+				success = false;
+				console.log("Error Adding Notification 5");
+			}
+			else 
+			{
+				success = true;
+			}
+		});
+		var newNotif = new notificationModel(
+		{
+			notification_id: "Notif7",
+			thread_id: "b2",
+			user_id: "someleze",
+			date_time: new Date(),
+			type: "Appraisal",
+			content: "Funny",
+			read: false
+		});
+		newNotif.save(function(err,newNotif)
+		{
+			if (err) 
+			{
+				success = false;
+				console.log("Error Adding Notification 5");
+			}
+			else 
+			{
+				success = true;
+			}
+		});
+		var newNotif = new notificationModel(
+		{
+			notification_id: "Notif8",
+			thread_id: "b3",
+			user_id: "someleze",
+			date_time: new Date(),
+			type: "new Post",
+			content: "",
+			read: false
+		});
+		newNotif.save(function(err,newNotif)
+		{
+			if (err) 
+			{
+				success = false;
+				console.log("Error Adding Notification 5");
+			}
+			else 
+			{
+				success = true;
+			}
+		});
+		var newNotif = new notificationModel(
+		{
+			notification_id: "Notif9",
+			thread_id: "root",
+			user_id: "vpieterse",
+			date_time: new Date(),
+			type: "Appraisal",
+			content: "Like",
+			read: false
+		});
+		newNotif.save(function(err,newNotif)
+		{
+			if (err) 
+			{
+				success = false;
+				console.log("Error Adding Notification 5");
+			}
+			else 
+			{
+				success = true;
+			}
+		});
+		var newNotif = new notificationModel(
+		{
+			notification_id: "Notif10",
+			thread_id: "b3",
+			user_id: "vpieterse",
+			date_time: new Date(),
+			type: "new Post",
+			content: "",
+			read: false
+		});
+		newNotif.save(function(err,newNotif)
+		{
+			if (err) 
+			{
+				success = false;
+				console.log("Error Adding Notification 5");
+			}
+			else 
+			{
+				success = true;
+			}
+		});
+		var newNotif = new notificationModel(
+		{
+			notification_id: "Notif11",
+			thread_id: "root",
+			user_id: "fsolms",
+			date_time: new Date(),
+			type: "Appraisal",
+			content: "Funny",
+			read: false
+		});
+		newNotif.save(function(err,newNotif)
+		{
+			if (err) 
+			{
+				success = false;
+				console.log("Error Adding Notification 5");
+			}
+			else 
+			{
+				success = true;
+			}
+		});
+		var newNotif = new notificationModel(
+		{
+			notification_id: "Notif12",
+			thread_id: "A1",
+			user_id: "fsolms",
+			date_time: new Date(),
+			type: "new Post",
+			content: "",
+			read: false
+		});
+		newNotif.save(function(err,newNotif)
+		{
+			if (err) 
+			{
+				success = false;
+				console.log("Error Adding Notification 5");
+			}
+			else 
+			{
+				success = true;
+			}
+		});
+		var newNotif = new notificationModel(
+		{
+			notification_id: "Notif13",
+			thread_id: "c2",
+			user_id: "fsolms",
+			date_time: new Date(),
+			type: "Delete",
+			content: "",
+			read: false
+		});
+		newNotif.save(function(err,newNotif)
+		{
+			if (err) 
+			{
+				success = false;
+				console.log("Error Adding Notification 5");
+			}
+			else 
+			{
+				success = true;
+			}
+		});
+		var newNotif = new notificationModel(
+		{
+			notification_id: "Notif14",
+			thread_id: "root",
+			user_id: "fsolms",
+			date_time: new Date(),
+			type: "new Post",
+			content: "",
+			read: false
+		});
+		newNotif.save(function(err,newNotif)
+		{
+			if (err) 
+			{
+				success = false;
+				console.log("Error Adding Notification 5");
+			}
+			else 
+			{
+				success = true;
+			}
+		});
+
+	//////////////////////////////////////////////////////////////////////////////
 	/********************************************************************************************************************************************************************/
 		if (success)
 		{
