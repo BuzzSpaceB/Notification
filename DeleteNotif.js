@@ -13,7 +13,7 @@ db.once('open', function (callback)
 });
 
 //Models required (old requirements)
-var user = require('./DatabaseStuff/models/user.js');
+var userModel = require('./DatabaseStuff/models/user.js');
 var threadsModel = require('./DatabaseStuff/models/thread.js');
 var notificationModel = require('./DatabaseStuff/models/notification.js');
 var subscriptionModel = require('./DatabaseStuff/models/subscription.js');
@@ -81,20 +81,31 @@ function getUserList(thread, reachedRoot) {
 				{
 					//Check to see if user is suscribed to instant emails and if so send an email
 					if (docs[0].InstantEmail === true) {
-						console.log(user + " has requested instant email");
+						userModel.find({user_id: user}, function(err, docs)
+						{
+							if (err) {
+								console.log(err);
+								throw err;
+							} else {
+								var toEmail = docs[0].preffered_email;
 
-						var options = {
-							from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-							// to : user + "@tuks.co.za", //Hack incase of lack of get email function
-							to : docs[0].preffered_email, //Send the email using the preffered email from the database
-							Subject: "New Deletion Notification",
-							plain: "New Buzz Space Deletion Notification" + currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason,
-							html: "New Buzz Space Deletion Notification <br>" + currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason
-						}
+								// console.log(user + " has requested instant email");
+								// console.log(toEmail);
 
-						var str = JSON.stringify(options);
-						send(str);
-						console.log(str);
+								var options = {
+									from: 'Buzz No Reply <DiscussionThree@gmail.com>',
+									// to : user + "@tuks.co.za", //Hack incase of lack of get email function
+									to : toEmail, //Send the email using the preffered email from the database
+									Subject: "New Deletion Notification",
+									plain: "New Buzz Space Deletion Notification" + currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason,
+									html: "New Buzz Space Deletion Notification <br>" + currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason
+								}
+
+								var str = JSON.stringify(options);
+								send(str);
+								// console.log(str);
+							}
+						});
 					}
 				});
 
