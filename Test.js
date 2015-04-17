@@ -103,7 +103,7 @@ app.post('/register', function (req, res) {
 
     var str = JSON.stringify(options);
     //res.sendfile('test.html');
-    editSubscription.GlobalEditSubscription(options, function(result){res.send(result);});
+    registerForNotification.GlobalRegisterForNotification(options, function(result){res.send(result);});
 
 });
 

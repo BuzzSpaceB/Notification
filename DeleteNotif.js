@@ -96,7 +96,7 @@ function getUserList(thread, reachedRoot) {
 									from: 'Buzz No Reply <DiscussionThree@gmail.com>',
 									// to : user + "@tuks.co.za", //Hack incase of lack of get email function
 									to : toEmail, //Send the email using the preffered email from the database
-									Subject: "New Deletion Notification",
+									subject: "New Deletion Notification",
 									plain: "New Buzz Space Deletion Notification" + currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason,
 									html: "New Buzz Space Deletion Notification <br>" + currentSessionUser + " has deleted a post by " + owner + " for the following reason: " + details.reason
 								}

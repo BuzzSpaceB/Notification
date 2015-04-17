@@ -126,7 +126,7 @@ function EditNotificationSettings(obj, doneFunction) // doneFunction is called w
         subSettingsModel.findOne({user_id: details.user_id}, function (err, doc){
             if (doc == null)
             {
-                result =  {resultText:"No users matching thread_id and user_id specified in " + obj};
+                result =  {resultText:"No users matching user_id specified in " + obj};
                 doneFunction(result);
             }
             else
