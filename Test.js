@@ -2,6 +2,7 @@ var send = require('./Email.js');
 var DeleteNotification = require('./DeleteNotif.js');
 var DailyNotification = require('./DailyNotif.js');
 var AddAppraisalToDB = require('./AppraisalNotifyMe.js');
+var StandardNotification = require('./StandardNotification.js');
 
 var express = require('express'),
     app = express();
@@ -69,6 +70,18 @@ app.post('/delete', function (req, res) {
     // var str = JSON.stringify(options);
         res.sendfile('test.html');
     DeleteNotification.deleteNotification(options);
+    // console.log(str);
+    // send(str);
+});
+
+app.post('/standard', function (req, res) {
+    var threadID = req.body.newThreadID;
+    var options = {
+    	thread: threadID
+    }
+ 
+    res.sendfile('test.html');
+    StandardNotification.standardNotification(options);
     // console.log(str);
     // send(str);
 });
