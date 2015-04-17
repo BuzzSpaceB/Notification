@@ -93,13 +93,13 @@ function getUserList(thread, reachedRoot) {
 						}
 
 						var str = JSON.stringify(options);
-						// send(str);
+						send(str);
 						console.log(str);
 					}
 				});
 
 				//Adds the notification to the notifcation database so that it can used by DailyNotif.js
-				// addNewNotification(user);
+				addNewNotification(user);
 				console.log("Adding notification to db");
 			}
 		}

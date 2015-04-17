@@ -5,20 +5,33 @@ var schedule = require('node-schedule');
 
 
 /* Database connection */
-var mongoose = require('mongoose');/*
-	, ds = require('DatabaseStuff');*/
+
+//var mongoose = require('mongoose');/*
+//	, ds = require('DatabaseStuff');*/
 
 //ds.init(mongoose);//this line is very important
+var mongoose = require('mongoose');
+mongoose.connect("mongodb://localhost:27017/db"); // connect to database
 
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) 
+{
+	;
+});
 
 /*Database access*/
 var Threads = require('./DatabaseStuff/models/thread.js');
 var Subscription = require('./DatabaseStuff/models/subscription.js');
 var Notification = require('./DatabaseStuff/models/notification.js');
+var Users = require('./DatabaseStuff/models/user.js');
+
 
 /*Global variables*/
 var callingThread;
 var callingUser;
+var callingEmail;
+var userEmail;
 var parent;
 var list = [];
 
@@ -28,7 +41,9 @@ var list = [];
 		thread = 'b1';
 	}
 */
-module.exports = function StandardNotification(obj) {
+
+module.exports.standardNotification =standardNotification;
+function standardNotification(obj) {
 	//sender = JSON.parse(obj);
 	sender = obj;
 	Threads.find({ thread_id: sender.thread}, function(err, docs) 
@@ -46,7 +61,49 @@ module.exports = function StandardNotification(obj) {
 			{	
 				callingThread = docs[0].thread_id;
 				callingUser = docs[0].user_id;
+				AssignCallingEmail(callingUser);
 				GetSubscribers(docs[0].thread_id);
+			}
+		}
+	});
+}
+/*Find the user's email...*/
+function AssignCallingEmail(user)
+{
+	Users.find({ user_id: user}, function(err, docs) 
+	{
+		if (err) 
+		{
+			throw err;			
+		}
+		else
+		{	if(docs.length == 0)
+			{
+			//	console.log("User doesn't exist..")
+			}
+			else
+			{	
+				callingEmail = docs[0].preffered_email;
+			}
+		}
+	});
+}
+function AssignUserEmail(user)
+{
+	Users.find({ user_id: user}, function(err, docs) 
+	{
+		if (err) 
+		{
+			throw err;			
+		}
+		else
+		{	if(docs.length == 0)
+			{
+			//	console.log("User doesn't exist..")
+			}
+			else
+			{	
+				userEmail = docs[0].preffered_email;
 			}
 		}
 	});
@@ -97,7 +154,9 @@ function GetSubscribers(thread)
 							{
 							
 								if (list.indexOf(doc.user_id) < 0)
+								
 								list.push(doc.user_id)
+								
 							}
 							if(doc.registeredTo[k] == callingUser)
 							{
@@ -123,9 +182,11 @@ function notify()
 		for (var i in list) 
 		{
 			newNotification(list[i]);
+			AssignUserEmail(list[i]);
 			var options = {
 					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-					to : list[i] + "@tuks.co.za",
+					//to : list[i] + "@tuks.co.za",
+					to : userEmail,
 					Subject: "New Comment Notification",
 					plain: "New Buzz Space Comment Notification " + callingUser + " has commented on a post. " + " You are subscribed to " + callingUser,
 					html: "New Buzz Space Comment Notification <br> " +  callingUser + " has commented on a post. " + " You are subscribed to " + callingUser,

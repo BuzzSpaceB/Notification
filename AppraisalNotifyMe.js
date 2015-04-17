@@ -22,7 +22,7 @@ var http = require('http'), fs = require('fs');
 var userWhoAppraised, typeOfAppraise, destinedEmail;
 var postCreator,currentSessionUser,appraisedThread_id,myAppraisalType;
 var request, response;
-var details;
+var details,name,nm;
 
 var mongoose = require('mongoose');
 mongoose.connect("mongodb://localhost:27017/db"); // connect to database
@@ -50,6 +50,7 @@ function addAppraisalToDB(details)
 	},function(err,docs)
 	{
 		var instant = docs.InstantEmail;
+	
 		if(instant == true)
 		{
             console.log("instant");
@@ -112,7 +113,7 @@ function checkSubscription(obj)
 		var value = JSON.stringify(notificationOn);
 		if(value == 'true')
 		{
-		
+			getUsersName(obj);
 			getEmailToSendTo(obj);
 					
 		}else
@@ -122,6 +123,24 @@ function checkSubscription(obj)
       });
 }
 
+function getUsersName(user)
+{  
+ 
+	var getEmail = Users.find(
+	{
+		 'user_id':{ $in:[
+			user.current_user_id
+		]}		
+	},function(err,docs)
+	{
+		
+		 nm= docs[0].username;
+		
+		
+	});
+	
+	
+}
 
 //This Function checks in the database for the email address of the post creator to send them an email
 
@@ -136,16 +155,16 @@ function getEmailToSendTo(user)
 	{
 		
 		destinedEmail = docs[0].preffered_email;
-		console.log(destinedEmail);
-		sendEmail(destinedEmail, user);  
+		sendEmail(destinedEmail, user, nm);  
 		
 	});
 }
 
 
+
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-function sendEmail(destinedEmail, obj)
+function sendEmail(destinedEmail, obj,name)
 {
 				details =obj;
 				var user = JSON.stringify(details.current_user_id);
@@ -157,7 +176,7 @@ function sendEmail(destinedEmail, obj)
 					to : destinedEmail,                        
 					subject: "New Buzz Appraisal Notification",
 					plain: "New Buzz Appraisal Notification",
-					html: user +" has given your post this appraisal:  " + type
+					html: nm +" has given your post this appraisal:  " + type
 				}
 				
 				if(destinedEmail!='undefined')
