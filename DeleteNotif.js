@@ -82,7 +82,7 @@ function getUserList(thread, reachedRoot) {
 					//Check to see if user is suscribed to instant emails and if so send an email
 					if (docs[0].InstantEmail === true) {
 						console.log(user + " has requested instant email");
-
+						console.log(docs[0]);
 						var options = {
 							from: 'Buzz No Reply <DiscussionThree@gmail.com>',
 							// to : user + "@tuks.co.za", //Hack incase of lack of get email function
@@ -94,7 +94,7 @@ function getUserList(thread, reachedRoot) {
 
 						var str = JSON.stringify(options);
 						send(str);
-						console.log(str);
+						//console.log(str);
 					}
 				});
 
