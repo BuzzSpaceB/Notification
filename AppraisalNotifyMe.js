@@ -50,7 +50,7 @@ function addAppraisalToDB(details)
 	},function(err,docs)
 	{
 		var instant = docs.InstantEmail;
-		instant = true;
+	
 		if(instant == true)
 		{
             console.log("instant");
