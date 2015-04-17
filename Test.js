@@ -18,11 +18,15 @@ app.post('/', function (req, res) {
 app.post('/appraisal', function (req, res) {
    
  var appraisal = req.body.appraisal;
+ var user = req.body.User_id;
+ var post = req.body.Post_User_id;
+ var thread = req.body.Thread_id;
 
+console.log(appraisal+user+thread+post);
     var options = {
-    	current_user_id: 'u11008602',
-    	post_user_id: 'u10075268',
-    	appraisedThread_id: 'c2',
+    	current_user_id: user,
+    	post_user_id: post,
+    	appraisedThread_id: thread,
 		appraisalType: appraisal
     }
 
