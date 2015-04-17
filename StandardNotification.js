@@ -30,7 +30,7 @@ var Users = require('./DatabaseStuff/models/user.js');
 /*Global variables*/
 var callingThread;
 var callingUser;
-var callingEmail;
+var callingUsername;
 var userEmail;
 var parent;
 var list = [];
@@ -61,14 +61,14 @@ function standardNotification(obj) {
 			{	
 				callingThread = docs[0].thread_id;
 				callingUser = docs[0].user_id;
-				AssignCallingEmail(callingUser);
+				AssignUsername(callingUser);
 				GetSubscribers(docs[0].thread_id);
 			}
 		}
 	});
 }
-/*Find the user's email...*/
-function AssignCallingEmail(user)
+/*Find the user's username...*/
+function AssignUsername(user)
 {
 	Users.find({ user_id: user}, function(err, docs) 
 	{
@@ -83,7 +83,7 @@ function AssignCallingEmail(user)
 			}
 			else
 			{	
-				callingEmail = docs[0].preffered_email;
+				callingUsername = docs[0].username;
 			}
 		}
 	});
@@ -154,7 +154,6 @@ function GetSubscribers(thread)
 							{
 							
 								if (list.indexOf(doc.user_id) < 0)
-								
 								list.push(doc.user_id)
 								
 							}
@@ -183,23 +182,43 @@ function notify()
 		{
 			newNotification(list[i]);
 			AssignUserEmail(list[i]);
-			var options = {
-					from: 'Buzz No Reply <DiscussionThree@gmail.com>',
-					//to : list[i] + "@tuks.co.za",
-					to : userEmail,
-					Subject: "New Comment Notification",
-					plain: "New Buzz Space Comment Notification " + callingUser + " has commented on a post. " + " You are subscribed to " + callingUser,
-					html: "New Buzz Space Comment Notification <br> " +  callingUser + " has commented on a post. " + " You are subscribed to " + callingUser,
+
+			Users.find({ user_id: list[i]}, function(err, docs) 
+			{
+				if (err) 
+				{
+					throw err;			
 				}
-			var message = JSON.stringify(options);
-		//	console.log(message);
-			send(message);
+				else
+				{	if(docs.length == 0)
+					{
+					//	console.log("User doesn't exist..")
+					}
+					else
+					{	
+						var options = {
+							from: 'Buzz No Reply <DiscussionThree@gmail.com>',
+							//to : list[i] + "@tuks.co.za",
+							to : docs[0].preffered_email,
+							subject: "New Comment Notification",
+							plain: "New Buzz Space Comment Notification " + callingUser + " has commented on a post. " + " You are subscribed to " + callingUser,
+							html: "New Buzz Space Comment Notification <br> " +  callingUser + " has commented on a post. " + " You are subscribed to " + callingUser,
+						}
+						var message = JSON.stringify(options);
+					//	console.log(message);
+						send(message);
+						//userEmail = docs[0].preffered_email;
+					}
+				}
+			});
+			
 		}
 	}
 }
 
 function newNotification(user)
 {
+	
 	var notification = new Notification(
 	{
 		notification_id: "Comment Notification",
@@ -207,7 +226,7 @@ function newNotification(user)
 		user_id: user,
 		date_time: new Date(),
 		type: "Comment on thread.",
-		content: callingUser + " has commented on post." + "You are subscribed to " + callingUser ,
+		content: callingUsername + " has commented on post." + "You are subscribed to " + callingUsername ,
 		read: false
 	});
 	notification.save(function(err,notification)
