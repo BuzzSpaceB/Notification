@@ -90,13 +90,13 @@ var StandardNotifReq ={
 	thread: 'b1'
 };
 StandardNotif(StandardNotifReq);
-/*********************************************************Appraisal Notificaiton ****************************************
+/*********************************************************Appraisal Notificaiton ****************************************/
 
 var AppraisalNotif = require('./AppraisalNotifyMe.js');
 /*
 	@param obj is the user id of the post creator and the user id of the appraisal creator as well as the appraised thread id
 	@author Liz Joseph
-*/
+*/ 
 var obj = {
     current_user_id: 'u11008602',
 	post_user_id: 'u10075268',
